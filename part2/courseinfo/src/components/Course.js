@@ -22,10 +22,9 @@ const Content = ({parts}) => {
   )
 }
 
-const Total = ({exercises}) => {
-  let total = exercises.reduce((a, b) => a + b, 0)
-
-  if (total === 0)
+const Total = ({sum}) => {
+  
+  if (sum === 0)
     return (
       <p>
         <strong>there is no exercises</strong>
@@ -34,19 +33,21 @@ const Total = ({exercises}) => {
 
   return (
     <p>
-      <strong>total of {total} exercise</strong>
+      <strong>total of {sum} exercise</strong>
     </p>
   )
 }
 
 const Course = ({course}) => {
-  let exercises = course.parts.map(part => part.exercises)
+  const sum = course.parts
+    .map(part => part.exercises)
+    .reduce((a, b) => a + b, 0)
 
   return (
     <>
       <Header course={course.name} />
       <Content parts={course.parts} />
-      <Total exercises={exercises} /> 
+      <Total sum={sum} /> 
     </>
   )
 }
