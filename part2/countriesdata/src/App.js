@@ -1,5 +1,19 @@
 import { useState, useEffect } from 'react'
 
+function Weather({ weather, city }) {
+  if (!weather.weather) return null
+
+  const icon = `http://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`
+  return (
+    <>
+      <h3>Weather in {city}</h3>
+      <p><strong>temperature:</strong> {weather.main.temp} Celcius</p>
+      <img src={icon} alt={weather?.weather[0].main} />
+      <p><strong>wind:</strong> {weather.wind.speed} m/s</p>
+    </>
+  )
+}
+
 function Country({ country }) {
 
   // states
@@ -25,36 +39,42 @@ function Country({ country }) {
       <ul>
         {Object.values(country.languages).map((language, index) => <li key={index}>{language}</li>)}
       </ul>
-      {weather.main && (
-        <>
-          <img src={country.flags.png} alt={country.name.common} width="200" />
-          <h3>Weather in {country.capital}</h3>
-          <p><strong>temperature:</strong> {weather.main.temp} Celcius</p>
-          <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`} alt={weather?.weather[0].main} />
-          <p><strong>wind:</strong> {weather.wind.speed} m/s</p>
-        </>
-      )}
+      <img src={country.flags.png} alt={country.name.common} width="100" />
+      
+      <Weather weather={weather} city={country.capital} />
     </>
   )
 }
 
-function CountryLine({ country }) {
-  const [show, setShow] = useState(false)
+function CountryList({ countries, setFilter }) {
+  if (countries.length === 0) {
+    return <p>No matches</p>
+  }
+
+  if (countries.length > 10) {
+    return <p>Too many matches, specify another filter</p>
+  }
+
+  if (countries.length === 1) {
+    return <Country country={countries[0]} />
+  }
+
   return (
-    <>
-      <p>
-        <span>{country.name.common}</span>
-        <button onClick={() => setShow(!show)}>{show? 'hide' : 'show'}</button>
-      </p>
-      {show && <Country country={country} />}
-    </>
+    <ul>
+      {countries.map((country, index) => (
+        <li key={index}>
+          {country.name.common}
+          <button onClick={() => setFilter(country.name.common)}>show</button>
+        </li>
+      ))}
+    </ul>
   )
 }
 
 function App() {
   // states
   const [countries, setCountries] = useState([])
-  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState('')
 
   // effects
   useEffect(() => {
@@ -65,34 +85,19 @@ function App() {
       })
   }, [])
 
-  // handlers
-  const handleSearchChange = (event) => {
-    setSearch(event.target.value)
-  }
-
   // pure variables
-  const countriesToShow = search 
-    ? countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()))
-    : ''
+  const filterd = countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
 
   return (
     <div>
       <p>
         find countries
-        <input value={search} onChange={handleSearchChange} />
+        <input 
+          value={filter} 
+          onChange={({target}) => setFilter(target.value)} />
       </p>
-      {
-        (countriesToShow.length > 10) && 
-        <p>Too many matches, specify another filter</p>
-      }
-      {
-        (countriesToShow.length <= 10 && countriesToShow.length > 1) && 
-        countriesToShow.map(country => <CountryLine key={country.cca3} country={country} />)
-      }
-      {
-        (countriesToShow.length === 1) && 
-        countriesToShow.map(country => <Country key={country.cca3} country={country} />)
-      }
+      
+      {filter && <CountryList countries={filterd} setFilter={setFilter} />}
     </div>
   )
 }
