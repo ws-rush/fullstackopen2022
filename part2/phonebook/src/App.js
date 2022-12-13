@@ -23,28 +23,18 @@ const App = () => {
       })
       .catch(error => {
         console.log(error)
-        setMessage({
-          text: `Error: ${error}`,
-          type: 'error'
-        })
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        notify(`Error: ${error}`, 'error')
       })
   }, [])
 
 
   // controlled components
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
+  const handleNameChange = ({target}) => {
+    setNewName(target.value)
   }
 
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
-
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value)
+  const handleNumberChange = ({target}) => {
+    setNewNumber(target.value)
   }
 
   // pure variables
@@ -53,6 +43,13 @@ const App = () => {
     : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 
   // pure functions
+  const notify = (message, type = 'success') => {
+    setMessage({ text: message, type })
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -68,23 +65,13 @@ const App = () => {
           .update(person.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== returnedPerson.id ? person : returnedPerson))
-            setMessage({
-              text: `Updated ${returnedPerson.name}`,
-              type: 'success'
-            })
+            notify(`Updated ${returnedPerson.name}`)
           })
           .catch(error => {
             console.log(error)
             setPersons(persons.filter(person => person.id !== changedPerson.id))
-            setMessage({
-              text: `Error: ${error}`,
-              type: 'error'
-            })
+            notify(`Error: ${error}`, 'error')
           })
-
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
 
         // reset the form
         setNewName('')
@@ -100,21 +87,11 @@ const App = () => {
       })
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setMessage({
-          text: `Added ${returnedPerson.name}`,
-          type: 'success'
-        })
+        notify(`Added ${returnedPerson.name}`)
       })
       .catch(error => {
         console.message(error)
-        setMessage({
-          text: `Error: ${error}`,
-          type: 'error'
-        })
-
-      setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+        notify(`Error: ${error}`, 'error')
       })
     
     // reset the form
@@ -122,29 +99,19 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleDelete = (id) => {
+  const deletePerson = (id) => {
     const person = persons.find(person => person.id === id)
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
-          setMessage({
-            text: `Deleted ${person.name}`,
-            type: 'success'
-          })
+          notify(`Deleted ${person.name}`)
         })
         .catch(error => {
           console.log(error)
-          setMessage({
-            text: `Error: ${error}`,
-            type: 'error'
-          })
+          notify(`Error: ${error}`, 'error')
         })
-
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
     }
   }
 
@@ -152,13 +119,16 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       {message && <Notification message={message.text} type={message.type} />}
-      <Filter text={filter} handleChange={handleFilterChange} />
+      <Filter 
+        value={filter}
+        handleChange={({target}) => setFilter(target.value)}
+      />
       
       <h2>Add a new</h2>
       <PersonsForm handleSubmit={addPerson} name={newName} number={newNumber} handleName={handleNameChange} handleNumber={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} handleDelete={handleDelete} />
+      <Persons persons={personsToShow} handleDelete={deletePerson} />
     </div>
   )
 }
