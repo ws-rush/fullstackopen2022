@@ -138,7 +138,7 @@ app.use(errorHandler)
 app.use(unknownEndpoint)
 
 // connect to db
-require('dotenv').config()
+// require('dotenv').config()
 mongoose.set('strictQuery', false)
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
