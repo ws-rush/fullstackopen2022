@@ -1,8 +1,12 @@
 const express = require('express')
+const mongoose = require('mongoose')
 // const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person.model')
+
 const app = express()
 
+// middlewares
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
@@ -17,77 +21,91 @@ app.use(cors())
 // })
 // app.use(morgan(':method :url :status - :body'))
 
-let Persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get('/info', (req, res) => {
     const date = new Date()
-    res.send(`<p>Phonebook has info for ${Persons.length} people</p><p>${date}</p>`)
+    const length = Person.find({}).then(result => {
+        res.send(`<p>Phonebook has info for ${result.length} people</p><p>${date}</p>`)
+    })
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(Persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = Persons.find(person => person.id === id)
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).send('Not found')
-    }
+app.get('/api/persons/:id', (req, res, next) => {
+    const {id} = req.params
+    Person.findById(id)
+    .then(person => {
+        if (person) {
+            res.json(person)
+        } else {
+            res.status(404).end()
+        }
+    }).catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
-    const person = req.body
-    if (!person.name || !person.number) {
+    const {name, number} = req.body
+    if (!name || !number) {
         return res.status(400).json({
             error: 'content missing'
         })
     }
-    if (Persons.find(p => p.name === person.name)) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-    const id = Math.floor(Math.random() * 1000000)
-    const newPerson = {
-        id: id,
-        name: person.name,
-        number: person.number
-    }
-    Persons = Persons.concat(newPerson)
-    res.status(201).json(newPerson)
+
+    Person.create({name, number})
+    .then(savedPerson => res.status(201).json(savedPerson))
+    .catch(error => res.status(404).send({ error: 'malformatted id' }))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+    console.log('put')
+  const {id} = req.params
+  const {name, number} = req.body
+
+  Person.findByIdAndUpdate(id, {name, number}, { new: true })
+  .then(result => {
+    res.json(result)
+  })
+  .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    Persons = Persons.filter(person => person.id !== id)
-    res.status(204).end()
+    Person.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
 })
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, _ => {
-    console.log(`Server running on port ${PORT}`)
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(errorHandler)
+app.use(unknownEndpoint)
+
+// connect to db
+require('dotenv').config()
+mongoose.set('strictQuery', false)
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => {
+  // listen for requests with env variables
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log('listining on port: ', process.env.PORT)
+  })
+})
+.catch(error => {
+  console.warn(error)
 })

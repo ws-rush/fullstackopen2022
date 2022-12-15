@@ -53,6 +53,12 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
+    // check if the name and number is not empty
+    if (newName.length === 0 || newNumber.length === 0) {
+      alert('Please enter a name and a number')
+      return
+    }
+
     // check if the name already exists
     if (persons.find(person => person.name === newName && person.number === newNumber)) {
       alert(`${newName} is already added to phonebook`)
@@ -90,7 +96,7 @@ const App = () => {
         notify(`Added ${returnedPerson.name}`)
       })
       .catch(error => {
-        console.message(error)
+        console.log(error)
         notify(`Error: ${error}`, 'error')
       })
     
