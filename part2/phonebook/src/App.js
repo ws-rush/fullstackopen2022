@@ -23,7 +23,7 @@ const App = () => {
       })
       .catch(error => {
         console.log(error)
-        notify(`Error: ${error}`, 'error')
+        notify(`Error: ${error.response.data.error}`, 'error')
       })
   }, [])
 
@@ -76,7 +76,7 @@ const App = () => {
           .catch(error => {
             console.log(error)
             setPersons(persons.filter(person => person.id !== changedPerson.id))
-            notify(`Error: ${error}`, 'error')
+            notify(`Error: ${error.response.data.error}`, 'error')
           })
 
         // reset the form
@@ -97,7 +97,7 @@ const App = () => {
       })
       .catch(error => {
         console.log(error)
-        notify(`Error: ${error}`, 'error')
+        notify(`Error: ${error.response.data.error}`, 'error')
       })
     
     // reset the form
@@ -116,7 +116,7 @@ const App = () => {
         })
         .catch(error => {
           console.log(error)
-          notify(`Error: ${error}`, 'error')
+          notify(`Error: ${error.response.data.error}`, 'error')
         })
     }
   }
