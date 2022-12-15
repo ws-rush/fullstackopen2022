@@ -48,7 +48,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     }).catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const {
     name,
     number
@@ -75,9 +75,7 @@ app.post('/api/persons', (req, res) => {
     number
   })
     .then(savedPerson => res.status(201).json(savedPerson))
-    .catch(_ => res.status(404).send({
-      error: 'malformatted id'
-    }))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
