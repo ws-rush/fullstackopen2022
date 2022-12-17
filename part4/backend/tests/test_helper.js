@@ -1,4 +1,4 @@
-const Blog = require('../models/blog.model')
+const Blog = require('../src/models/blog.model')
 
 // initial blogs with diffrent content for every one
 const initialBlogs = [
