@@ -1,6 +1,6 @@
-const app = require('./app')
-const express = require('express')
 require('express-async-errors')
+const express = require('express')
+const app = require('./app')
 const cors = require('cors')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
@@ -32,3 +32,5 @@ mongoose.connect(config.MONGODB_URI)
   .catch((error) => {
     logger.error('error connecting to MongoDB:', error.message)
   })
+
+module.exports = server

@@ -18,7 +18,7 @@ app.get('/api/blogs/:id', async (req, res) => {
   }
 })
 
-app.post('/api/blogs', async (req, res) => {
+app.post('/api/blogs', async (req, res, next) => {
   const blog = await Blog.create(req.body)
   res.status(201).json(blog)
 })
