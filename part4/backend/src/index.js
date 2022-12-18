@@ -13,6 +13,7 @@ server.use(cors())
 server.use(express.json())
 server.use(express.static('build'))
 server.use(middleware.requestLogger)
+server.use(middleware.tokenExtractor)
 
 server.use(app)
 

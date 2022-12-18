@@ -1,6 +1,6 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog.model')
-const User = require('../models/user.model')
+const { userExtractor } = require('../utils/middleware')
 
 blogRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -16,37 +16,46 @@ blogRouter.get('/:id', async (req, res) => {
   }
 })
 
+blogRouter.use(userExtractor)
+
 blogRouter.post('/', async (req, res) => {
-  const { title, author, url, likes } = req.body
-  const user = await User.findById(req.user)
-  const blog = await Blog.create({
-    title,
-    author,
-    url,
-    likes,
-    user: user._id
-  })
+  if (!req.user) {
+    return res.status(401).json({ error: 'unauthorized' })
+  }
+
+  const user = req.user
+  const blog = await Blog.create({ ...req.body, user: user.id })
   user.blogs = user.blogs.concat(blog._id)
   await user.save()
   res.status(201).json(blog)
 })
 
 blogRouter.put('/:id', async (req, res) => {
-  const user = await User.findById(req.user)
-  if (user.blogs.includes(req.params.id)) {
-    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, context: 'query' })
-    res.json(blog)
+  const blogToUpdate = await Blog.findById(req.params.id)
+  if (!blogToUpdate) {
+    return res.status(404).json({ error: 'blog not found' })
   }
-  res.status(401).json({ error: 'unauthorized' })
+
+  if (blogToUpdate.user && blogToUpdate.user.toString() !== req.user) {
+    return res.status(401).json({ error: 'unauthorized' })
+  }
+
+  const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, context: 'query' })
+  res.json(blog)
 })
 
 blogRouter.delete('/:id', async (req, res) => {
-  const user = await User.findById(req.user)
-  if (user.blogs.includes(req.params.id)) {
-    await Blog.findByIdAndRemove(req.params.id)
-    res.status(204).end()
+  const blogToDelete = await Blog.findById(req.params.id)
+  if (!blogToDelete) {
+    return res.status(404).json({ error: 'blog not found' })
   }
-  res.status(401).json({ error: 'unauthorized' })
+
+  if (blogToDelete.user && blogToDelete.user.toString() !== req.user) {
+    return res.status(401).json({ error: 'unauthorized' })
+  }
+
+  await Blog.findByIdAndRemove(req.params.id)
+  res.status(204).end()
 })
 
 module.exports = blogRouter

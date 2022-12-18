@@ -1,6 +1,6 @@
 const server = require('../src/index')
 const supertest = require('supertest')
-const helper = require('./test_helper')
+const helper = require('../tests/test_helper')
 const bcrypt = require('bcryptjs')
 const User = require('../src/models/user.model')
 
