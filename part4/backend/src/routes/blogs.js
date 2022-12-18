@@ -1,59 +1,52 @@
-const personsRouter = require('express').Router()
-const Person = require('../models/person.model')
+const blogRouter = require('express').Router()
+const Blog = require('../models/blog.model')
+const User = require('../models/user.model')
 
-personsRouter.get('/', (request, response) => {
-  Person.find({}).then(notes => {
-    response.json(notes)
-  })
+blogRouter.get('/', async (req, res) => {
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  res.json(blogs)
 })
 
-personsRouter.get('/:id', (request, response, next) => {
-  Person.findById(request.params.id)
-    .then(note => {
-      if (note) {
-        response.json(note)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
-})
-
-personsRouter.post('/', (request, response, next) => {
-  const body = request.body
-
-  Person.create({
-    content: body.content,
-    important: body.important || false,
-    date: new Date()
-  })
-    .then(savedNote => {
-      response.json(savedNote)
-    })
-    .catch(error => next(error))
-})
-
-personsRouter.delete('/:id', (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-})
-
-personsRouter.put('/:id', (request, response, next) => {
-  const body = request.body
-
-  const note = {
-    content: body.content,
-    important: body.important
+blogRouter.get('/:id', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  if (blog) {
+    res.json(blog)
+  } else {
+    res.status(404).end()
   }
-
-  Person.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then(updatedNote => {
-      response.json(updatedNote)
-    })
-    .catch(error => next(error))
 })
 
-module.exports = personsRouter
+blogRouter.post('/', async (req, res) => {
+  const { title, author, url, likes } = req.body
+  const user = await User.findById(req.user)
+  const blog = await Blog.create({
+    title,
+    author,
+    url,
+    likes,
+    user: user._id
+  })
+  user.blogs = user.blogs.concat(blog._id)
+  await user.save()
+  res.status(201).json(blog)
+})
+
+blogRouter.put('/:id', async (req, res) => {
+  const user = await User.findById(req.user)
+  if (user.blogs.includes(req.params.id)) {
+    const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, context: 'query' })
+    res.json(blog)
+  }
+  res.status(401).json({ error: 'unauthorized' })
+})
+
+blogRouter.delete('/:id', async (req, res) => {
+  const user = await User.findById(req.user)
+  if (user.blogs.includes(req.params.id)) {
+    await Blog.findByIdAndRemove(req.params.id)
+    res.status(204).end()
+  }
+  res.status(401).json({ error: 'unauthorized' })
+})
+
+module.exports = blogRouter
