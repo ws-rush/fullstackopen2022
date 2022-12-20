@@ -48,7 +48,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
       setUser(user)
       blogService.setToken(user.token)
-      window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user)) 
+      window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -106,12 +106,12 @@ const App = () => {
     return (
       <div>
         {message && <Notification text={message.text} type={message.type} />}
-        <LoginForm 
-          username={username} 
-          password={password} 
-          handleSubmit={handleLogin} 
-          handleUsernameChange={({target}) => setUsername(target.value)} 
-          handlePasswordChange={({target}) => setPassword(target.value)} />
+        <LoginForm
+          username={username}
+          password={password}
+          handleSubmit={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)} />
       </div>
     )
   }
@@ -126,9 +126,9 @@ const App = () => {
         <PostForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
+        <Blog
+          key={ blog.id}
+          blog={ blog }
           updateLikes={updateBlog}
           handleRemove={removeBlog} />
       )}
