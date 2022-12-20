@@ -35,8 +35,9 @@ blogRouter.put('/:id', async (req, res) => {
   if (!blogToUpdate) {
     return res.status(404).json({ error: 'blog not found' })
   }
-
+  
   if (blogToUpdate.user && blogToUpdate.user.toString() !== req.user) {
+    
     return res.status(401).json({ error: 'unauthorized' })
   }
 
