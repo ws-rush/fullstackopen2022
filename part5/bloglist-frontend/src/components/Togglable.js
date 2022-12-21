@@ -23,7 +23,7 @@ const Togglable = forwardRef(function Toggilable({ buttonLabel, children }, refs
   }
 
   return (
-    <div>
+    <div className='togglableContent'>
       {children}
       <button onClick={toggleVisability}>cancel</button>
     </div>

@@ -3,8 +3,8 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import PostForm from './components/PostForm'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import blogService from './services/blogService'
+import loginService from './services/loginService'
 
 const LoginForm = ({ username, password, handleSubmit, handleUsernameChange, handlePasswordChange }) => {
   return (

@@ -20,7 +20,7 @@ const Blog = ({ blog, updateLikes, handleRemove }) => {
   }
 
   return (
-    <div style={style}>
+    <div className='blog' style={style}>
       <h4>
         {blog.title}
         <button onClick={() => setVisible(!visible)}>{visible? 'hide': 'view'}</button>
@@ -28,7 +28,9 @@ const Blog = ({ blog, updateLikes, handleRemove }) => {
       {visible &&
       <>
         <p>{blog.url}</p>
-        <p>{blog.likes} likes <button onClick={increaseLikesByOne}>like</button></p>
+        <p>{blog.likes} likes
+          <button onClick={increaseLikesByOne}>like</button>
+        </p>
         <p>{blog.author}</p>
         <button onClick={remove}>remove</button>
       </>
