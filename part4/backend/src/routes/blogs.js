@@ -27,7 +27,6 @@ blogRouter.post('/', async (req, res) => {
   // find a user by id
   const user = await User.findById(req.user)
   const blog = await Blog.create({ ...req.body, user: req.user })
-  console.log('post blog', blog)
   user.blogs = user.blogs.concat(blog._id)
   await user.save()
   res.status(201).json(blog)
@@ -56,9 +55,6 @@ blogRouter.delete('/:id', async (req, res) => {
   if (blogToDelete.user && blogToDelete.user.toString() !== req.user) {
     return res.status(401).json({ error: 'unauthorized' })
   }
-  console.log('blog id', blogToDelete.id)
-  console.log('blog user', blogToDelete.user)
-  console.log('req user', req.user)
 
   await Blog.findByIdAndRemove(req.params.id)
   res.status(204).end()
