@@ -109,14 +109,14 @@ describe('when there are some blogs in database', () => {
         author: 'Kalle Ilves',
         likes: 7
       }
-    
+
       await api
         .post('/api/blogs')
         .send(newBlog)
         .set('Authorization', `bearer ${token}`)
         .expect(400)
         .expect('Content-Type', /application\/json/)
-    
+
         const blogsAtEnd = await helper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
     })
@@ -151,7 +151,7 @@ describe('user creation', () => {
       username: 'kalle',
       pasword: 'p'
     }
-  
+
     await api
       .post('/api/auth/register')
       .send(newUser)

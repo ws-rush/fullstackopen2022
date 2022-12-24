@@ -28,6 +28,7 @@ const App = () => {
   useEffect(() => {
     (async () => {
       const blogs = await blogService.getAll()
+      // sorted by likes in reverse order
       const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs( sortedBlogs )
     })()
@@ -105,13 +106,16 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <h1>Blogs</h1>
         {message && <Notification text={message.text} type={message.type} />}
         <LoginForm
           username={username}
           password={password}
           handleSubmit={handleLogin}
           handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)} />
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+        />
+        <p>Blog app, wusaby-rush 2022</p>
       </div>
     )
   }

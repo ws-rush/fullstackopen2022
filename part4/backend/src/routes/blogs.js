@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog.model')
+const User = require('../models/user.model')
 const { userExtractor } = require('../utils/middleware')
 
 blogRouter.get('/', async (req, res) => {
@@ -23,8 +24,10 @@ blogRouter.post('/', async (req, res) => {
     return res.status(401).json({ error: 'unauthorized' })
   }
 
-  const user = req.user
-  const blog = await Blog.create({ ...req.body, user: user.id })
+  // find a user by id
+  const user = await User.findById(req.user)
+  const blog = await Blog.create({ ...req.body, user: req.user })
+  console.log('post blog', blog)
   user.blogs = user.blogs.concat(blog._id)
   await user.save()
   res.status(201).json(blog)
@@ -35,9 +38,8 @@ blogRouter.put('/:id', async (req, res) => {
   if (!blogToUpdate) {
     return res.status(404).json({ error: 'blog not found' })
   }
-  
+
   if (blogToUpdate.user && blogToUpdate.user.toString() !== req.user) {
-    
     return res.status(401).json({ error: 'unauthorized' })
   }
 
@@ -54,9 +56,13 @@ blogRouter.delete('/:id', async (req, res) => {
   if (blogToDelete.user && blogToDelete.user.toString() !== req.user) {
     return res.status(401).json({ error: 'unauthorized' })
   }
+  console.log('blog id', blogToDelete.id)
+  console.log('blog user', blogToDelete.user)
+  console.log('req user', req.user)
 
   await Blog.findByIdAndRemove(req.params.id)
   res.status(204).end()
 })
 
 module.exports = blogRouter
+
