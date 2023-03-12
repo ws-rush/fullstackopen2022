@@ -19,7 +19,7 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-export default function reducer(state = initialState, action) {
+export default function anecdoteReducer(state = initialState, action) {
   console.log('state now: ', state)
   console.log('action', action)
 
