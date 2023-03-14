@@ -1,8 +1,7 @@
 import { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { setAnecdotes, voteFor } from "../reducers/anecdoteReducer"
-import { setNotification, clearNotification } from "../reducers/notificationReducer"
-import anecdoteService from "../services/anecdotes"
+import { initializeAnecdotes, addVote } from "../reducers/anecdoteReducer"
+import { setTimedNotification } from "../reducers/notificationReducer"
 
 export default function AnecdoteList() {
     const anecdotes = useSelector(state => {
@@ -15,17 +14,12 @@ export default function AnecdoteList() {
     })
     const dispatch = useDispatch()
     useEffect(() => {
-      anecdoteService.getAll().then(anecdotes =>
-        dispatch(setAnecdotes(anecdotes))
-      )
-    }, [])
+      dispatch(initializeAnecdotes())
+    }, [dispatch])
 
     const vote = (anecdote) => {
-        dispatch(voteFor(anecdote))
-        dispatch(setNotification(`you voted for '${anecdote.content}'`))
-        setTimeout(() => {
-            dispatch(clearNotification())
-        }, 5000)
+        dispatch(addVote(anecdote))
+        dispatch(setTimedNotification(`you voted for '${anecdote.content}'`, 5))
     }
 
     return (<>
