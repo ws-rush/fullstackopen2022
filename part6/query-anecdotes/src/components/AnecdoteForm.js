@@ -1,12 +1,19 @@
 import { useQueryClient, useMutation } from 'react-query'
 import anecdoteService from '../services/anecdoteService'
+import { useDispatch } from '../libs/rush'
+import { setTimedNotification } from '../reducers/notificationReducer'
 
 const AnecdoteForm = () => {
+  const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const { mutate } = useMutation(anecdoteService.create, {
-    onSuccess: () => {
+    onSuccess: ({ content }) => {
       queryClient.invalidateQueries('anecdotes')
+      dispatch(setTimedNotification(`you created ${content}`, 5))
     },
+    onError: (error) => {
+      dispatch(setTimedNotification('too short, must be at least 5 characters', 5))
+    }
   })
 
   const onCreate = (event) => {
