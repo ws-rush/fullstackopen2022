@@ -1,29 +1,46 @@
-// single state library
-// TODO: add multiple stores support
-// TODO: support name space
 import { createContext, useContext, useReducer } from "react";
 
-// pass default value, if user doesnt pass it
 const StateContext = createContext()
 
-// custom component for context pass reducer
 export function RushProvider({ store, children }) {
-  const [state, dispatch] = useReducer(store.reducer, store.initialState)
+  const initialState = {};
+  const reducers = {};
+
+  // get all the initial state values and reducers from store object
+  Object.keys(store).forEach((key) => {
+    initialState[key] = store[key].initialState;
+    reducers[key] = store[key].reducer;
+  });
+
+    // merge reducer logic of all sub-reducers
+    const rootReducer = (state, action) => {
+        let updatedState = {};
+        Object.keys(store).forEach((key) => {
+          if (action.type.startsWith(key)) { // check if action.type matches the key
+            updatedState[key] = reducers[key](state[key], action)
+          } else {
+            updatedState[key] = state[key]; // otherwise, just copy over the old state
+          }
+        });
+        return { ...state, ...updatedState }
+    }
+
+  const [state, dispatch] = useReducer(rootReducer, initialState);
+
   return (
-    <StateContext.Provider value={{state, dispatch}}>
+    <StateContext.Provider value={[state, dispatch]}>
       {children}
     </StateContext.Provider>
-  )
+  );
 }
 
-// custom hooks get reducer functions
 export function useSelector(selector) {
-  const { state } = useContext(StateContext)
+  const [state] = useContext(StateContext)
   return selector(state)
 }
 
 export function useDispatch() {
-  const { dispatch } = useContext(StateContext)
+  const [, dispatch] = useContext(StateContext)
   return (input) => {
     if (typeof input === 'function') {
         input(dispatch)

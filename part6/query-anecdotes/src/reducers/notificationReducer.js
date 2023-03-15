@@ -2,6 +2,7 @@ const notificationReducer = {
     name: 'notification',
     initialState: null,
     reducer: (state, action) => {
+        console.log('notification', state, action)
         switch (action.type) {
             case `notification/setNotification`:
                 return action.payload

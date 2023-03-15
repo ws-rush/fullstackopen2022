@@ -1,7 +1,7 @@
 import { useSelector } from "../libs/rush"
 
 const Notification = () => {
-  const message = useSelector(state => state)
+  const message = useSelector(state => state.notification)
 
   const style = {
     border: 'solid',
