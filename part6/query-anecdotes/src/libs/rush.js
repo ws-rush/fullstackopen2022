@@ -10,26 +10,25 @@ const StateContext = createContext()
 export function RushProvider({ store, children }) {
   const [state, dispatch] = useReducer(store.reducer, store.initialState)
   return (
-    <StateContext.Provider value={[state, dispatch]}>
+    <StateContext.Provider value={{state, dispatch}}>
       {children}
     </StateContext.Provider>
   )
 }
 
-// ustom hooks get reducer functions
+// custom hooks get reducer functions
 export function useSelector(selector) {
-  const result = useContext(StateContext)
-  return selector(result[0])
+  const { state } = useContext(StateContext)
+  return selector(state)
 }
 
 export function useDispatch() {
-  const result = useContext(StateContext)
+  const { dispatch } = useContext(StateContext)
   return (input) => {
-    console.log(input)
     if (typeof input === 'function') {
-        input(result[1])
+        input(dispatch)
     } else {
-        result[1](input)
+        dispatch(input)
     }
   }
 }
