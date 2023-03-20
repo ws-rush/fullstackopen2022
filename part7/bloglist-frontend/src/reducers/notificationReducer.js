@@ -1,23 +1,24 @@
-// notification reducer
-const notificationReducer = {
+import { createSlice } from '../libs/rush'
+
+const notificationReducer = createSlice({
   name: 'notification',
   initialState: {
     message: null,
     type: null,
   },
-  reducer: (state, action) => {
-    switch (action.type) {
-    case 'notification/setNotification':
+  reducers: {
+    setNotification(state, action) {
       return action.payload
-    case 'notification/clearNotification':
+    },
+    clearNotification() {
       return null
-    default:
-      return state
-    }
+    },
   },
-}
+})
 
-export default notificationReducer
+export default notificationReducer.reducer
+export const { setNotification, clearNotification } =
+  notificationReducer.actions
 
 export function setNotificationWithTimeout(
   message,
@@ -25,15 +26,9 @@ export function setNotificationWithTimeout(
   time = 5
 ) {
   return async (dispatch) => {
-    dispatch({
-      type: 'notification/setNotification',
-      payload: {
-        message,
-        type,
-      },
-    })
+    dispatch(setNotification({ message, type }))
     setTimeout(() => {
-      dispatch({ type: 'notification/clearNotification' })
+      dispatch(clearNotification())
     }, time * 1000)
   }
 }

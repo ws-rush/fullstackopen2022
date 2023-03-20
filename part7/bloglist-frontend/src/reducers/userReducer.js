@@ -1,4 +1,5 @@
 import blogService from '../services/blogService'
+import { createSlice } from '../libs/rush'
 
 // check if user is stored in localStorage
 const storedUserJSON = window.localStorage.getItem('loggedBlogsappUser')
@@ -7,13 +8,11 @@ if (storedUserJSON) {
   storedUser = JSON.parse(storedUserJSON)
 }
 
-// notification reducer
-const userReducer = {
+const userReducer = createSlice({
   name: 'user',
   initialState: storedUser,
-  reducer: (state, action) => {
-    switch (action.type) {
-    case 'user/setUser':
+  reducers: {
+    setUser(state, action) {
       if (action.payload) {
         window.localStorage.setItem(
           'loggedBlogsappUser',
@@ -21,14 +20,16 @@ const userReducer = {
         )
         blogService.setToken(action.payload.token)
       }
+
       return action.payload
-    case 'user/clearUser':
+    },
+    clearUser(state, action) {
+      console.log(state, action)
       window.localStorage.removeItem('loggedBlogsappUser')
       return null
-    default:
-      return state
-    }
+    },
   },
-}
+})
 
-export default userReducer
+export default userReducer.reducer
+export const { setUser, clearUser } = userReducer.actions
