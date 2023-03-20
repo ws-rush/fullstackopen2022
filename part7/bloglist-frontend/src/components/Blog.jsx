@@ -1,7 +1,12 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { setNotificationWithTimeout } from '../reducers/notificationReducer'
+import { changeBlog, removeBlog } from '../reducers/blogsReducer'
+import blogService from '../services/blogService'
 
-function Blog({ blog, updateLikes, handleRemove }) {
+function Blog({ blog }) {
   const [visible, setVisible] = useState(false)
+  const dispatch = useDispatch()
 
   const style = {
     border: '1px solid black',
@@ -9,13 +14,26 @@ function Blog({ blog, updateLikes, handleRemove }) {
     margin: '5px',
   }
 
-  const increaseLikesByOne = () => {
-    updateLikes(blog.id, { likes: blog.likes + 1 })
+  const increaseLikesByOne = async () => {
+    try {
+      const result = await blogService.update(blog.id, {
+        likes: blog.likes + 1,
+      })
+      dispatch(changeBlog(result))
+    } catch (exception) {
+      dispatch(setNotificationWithTimeout('error updating blog', 'error'))
+    }
   }
 
-  const remove = () => {
+  const remove = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      handleRemove(blog.id)
+      try {
+        await blogService.remove(blog.id)
+        dispatch(removeBlog(blog.id))
+      } catch (exception) {
+        console.log(exception)
+        dispatch(setNotificationWithTimeout('error removing blog', 'error'))
+      }
     }
   }
 

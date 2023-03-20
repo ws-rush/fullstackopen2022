@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -7,6 +7,8 @@ import PostForm from './components/PostForm'
 import blogService from './services/blogService'
 import loginService from './services/loginService'
 import { setNotificationWithTimeout } from './reducers/notificationReducer'
+import { setBlogs } from './reducers/blogsReducer'
+import { clearUser, setUser } from './reducers/userReducer'
 
 function LoginForm({ handleSubmit }) {
   return (
@@ -19,78 +21,33 @@ function LoginForm({ handleSubmit }) {
 }
 
 function Main() {
-  const [blogs, setBlogs] = useState([])
-  console.log(blogs)
-
-  const blogFormRef = useRef()
+  const blogs = useSelector((state) =>
+    [...state.blogs].sort((a, b) => b.likes - a.likes)
+  )
   const dispatch = useDispatch()
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((result) => {
-      setBlogs(result.sort((a, b) => b.likes - a.likes))
+      dispatch(setBlogs(result))
     })
   }, [])
-
-  const addBlog = async (blogObject) => {
-    try {
-      const blog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(blog))
-      blogFormRef.current.toggleVisability()
-      dispatch(
-        setNotificationWithTimeout(
-          `a new blog ${blog.title} by ${blog.author} added`
-        )
-      )
-    } catch (exception) {
-      dispatch(setNotificationWithTimeout('error adding blog', 'error'))
-    }
-  }
-
-  const updateBlog = async (id, blogObject) => {
-    try {
-      const blog = await blogService.update(id, blogObject)
-      const updatedBlogs = blogs
-        .map((b) => (b.id === blog.id ? blog : b))
-        .sort((a, b) => b.likes - a.likes)
-      setBlogs(updatedBlogs)
-    } catch (exception) {
-      dispatch(setNotificationWithTimeout('error updating blog', 'error'))
-    }
-  }
-
-  const removeBlog = async (id) => {
-    try {
-      const notifyMessage = await blogService.remove(id)
-      console.log(notifyMessage)
-      const updatedBlogs = blogs.filter((b) => b.id !== id)
-      setBlogs(updatedBlogs)
-    } catch (exception) {
-      console.log(exception)
-      dispatch(setNotificationWithTimeout('error removing blog', 'error'))
-    }
-  }
 
   return (
     <>
       <h2>create new</h2>
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <PostForm createBlog={addBlog} />
+        <PostForm formRef={blogFormRef} />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          updateLikes={updateBlog}
-          handleRemove={removeBlog}
-        />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </>
   )
 }
 
-function App({ storedUser }) {
-  const [user, setUser] = useState(storedUser)
-
+function App() {
+  const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
   const handleLogin = async (e) => {
@@ -99,9 +56,7 @@ function App({ storedUser }) {
     const password = e.target.password.value
     try {
       const loggedUser = await loginService.login({ username, password })
-      setUser(loggedUser)
-      blogService.setToken(user.token)
-      window.localStorage.setItem('loggedBlogsappUser', JSON.stringify(user))
+      dispatch(setUser(loggedUser))
       e.target.username.value = ''
       e.target.password.value = ''
     } catch (exception) {
@@ -112,8 +67,7 @@ function App({ storedUser }) {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogsappUser')
-    setUser(null)
+    dispatch(clearUser())
   }
 
   if (!user) {
@@ -127,7 +81,6 @@ function App({ storedUser }) {
     )
   }
 
-  blogService.setToken(storedUser.token)
   return (
     <div>
       <Notification />

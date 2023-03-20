@@ -21,14 +21,14 @@ export const { setNotification, clearNotification } =
 export default notificationReducer.reducer
 
 export function setNotificationWithTimeout(
-  notification,
+  message,
   type = 'success',
   timeout = 5
 ) {
   return async (dispatch) => {
-    dispatch(setNotification({ message: notification, type }))
+    dispatch(setNotification({ message, type }))
     setTimeout(() => {
       dispatch(clearNotification())
-    }, timeout)
+    }, timeout * 1000)
   }
 }

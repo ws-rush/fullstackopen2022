@@ -20,6 +20,10 @@ const create = async (newObject) => {
     },
     body: JSON.stringify(newObject),
   })
+
+  if (!response.ok)
+    throw new Error(`Failed to create blog. (status:  ${response.status})`)
+
   return response.json()
 }
 
@@ -32,6 +36,10 @@ const update = async (id, newObject) => {
     },
     body: JSON.stringify(newObject),
   })
+
+  if (!response.ok)
+    throw new Error(`Failed to update blog. (status:  ${response.status})`)
+
   return response.json()
 }
 
@@ -43,6 +51,9 @@ const remove = async (id) => {
       Authorization: token,
     },
   })
+
+  if (!response.ok)
+    throw new Error(`Failed to delete blog. (status:  ${response.status})`)
 
   return response
 }
