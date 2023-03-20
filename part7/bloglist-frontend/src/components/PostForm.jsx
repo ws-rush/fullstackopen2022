@@ -1,10 +1,20 @@
-import { useDispatch } from 'react-redux'
+import { useMutation, useQueryClient } from 'react-query'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
-import { newBlog } from '../reducers/blogsReducer'
 import blogService from '../services/blogService'
+import { useDispatch } from '../libs/rush'
 
 function PostForm({ formRef }) {
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(blogService.create, {
+    onSuccess: (data) => {
+      queryClient.setQueryData('blogs', (old) => [...old, data])
+      dispatch(setNotificationWithTimeout(`a new blog ${data.title} added`))
+    },
+    onError: (error) => {
+      dispatch(setNotificationWithTimeout(error.message, 'error'))
+    },
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -13,23 +23,11 @@ function PostForm({ formRef }) {
       author: e.target.author.value,
       url: e.target.url.value,
     }
-
-    try {
-      const blog = await blogService.create(blogObject)
-      dispatch(newBlog(blog))
-      formRef.current.toggleVisability()
-      dispatch(
-        setNotificationWithTimeout(
-          `a new blog ${blog.title} by ${blog.author} added`
-        )
-      )
-    } catch (exception) {
-      dispatch(setNotificationWithTimeout('error adding blog', 'error'))
-    } finally {
-      e.target.title.value = ''
-      e.target.author.value = ''
-      e.target.url.value = ''
-    }
+    mutate(blogObject)
+    formRef.current.toggleVisability()
+    e.target.title.value = ''
+    e.target.author.value = ''
+    e.target.url.value = ''
   }
 
   return (

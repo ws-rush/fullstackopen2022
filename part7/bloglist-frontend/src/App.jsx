@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useRef } from 'react'
+import { useQuery } from 'react-query'
+import { useSelector, useDispatch } from './libs/rush'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -7,8 +8,6 @@ import PostForm from './components/PostForm'
 import blogService from './services/blogService'
 import loginService from './services/loginService'
 import { setNotificationWithTimeout } from './reducers/notificationReducer'
-import { setBlogs } from './reducers/blogsReducer'
-import { clearUser, setUser } from './reducers/userReducer'
 
 function LoginForm({ handleSubmit }) {
   return (
@@ -21,17 +20,18 @@ function LoginForm({ handleSubmit }) {
 }
 
 function Main() {
-  const blogs = useSelector((state) =>
-    [...state.blogs].sort((a, b) => b.likes - a.likes)
-  )
-  const dispatch = useDispatch()
+  const result = useQuery('blogs', blogService.getAll)
   const blogFormRef = useRef()
 
-  useEffect(() => {
-    blogService.getAll().then((result) => {
-      dispatch(setBlogs(result))
-    })
-  }, [])
+  if (result.isLoading) {
+    return <div>loading...</div>
+  }
+
+  if (result.isError) {
+    return <div>error: {result.error.message}</div>
+  }
+
+  const blogs = [...result.data].sort((a, b) => b.likes - a.likes)
 
   return (
     <>
@@ -56,7 +56,7 @@ function App() {
     const password = e.target.password.value
     try {
       const loggedUser = await loginService.login({ username, password })
-      dispatch(setUser(loggedUser))
+      dispatch({ type: 'user/setUser', payload: loggedUser })
       e.target.username.value = ''
       e.target.password.value = ''
     } catch (exception) {
@@ -67,7 +67,7 @@ function App() {
   }
 
   const handleLogout = () => {
-    dispatch(clearUser())
+    dispatch({ type: 'user/clearUser' })
   }
 
   if (!user) {

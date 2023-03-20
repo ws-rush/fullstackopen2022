@@ -42,7 +42,11 @@ blogRouter.put('/:id', async (req, res) => {
     return res.status(401).json({ error: 'unauthorized' })
   }
 
-  const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true, context: 'query' })
+  const blog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+    context: 'query'
+  })
   res.json(blog)
 })
 
@@ -61,4 +65,3 @@ blogRouter.delete('/:id', async (req, res) => {
 })
 
 module.exports = blogRouter
-

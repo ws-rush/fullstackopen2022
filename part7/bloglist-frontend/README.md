@@ -1,4 +1,4 @@
-> this code version solved 7.10-13 with redux
+> this code version solved 7.10-13 with react-query
 
 # Getting Started with Create React App
 

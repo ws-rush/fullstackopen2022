@@ -27,7 +27,7 @@ const create = async (newObject) => {
   return response.json()
 }
 
-const update = async (id, newObject) => {
+const update = async ({ id, ...newObject }) => {
   const response = await fetch(`${baseUrl}/${id}`, {
     method: 'PUT',
     headers: {

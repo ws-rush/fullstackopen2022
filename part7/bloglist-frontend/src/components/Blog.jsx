@@ -1,12 +1,37 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useMutation, useQueryClient } from 'react-query'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
-import { changeBlog, removeBlog } from '../reducers/blogsReducer'
+import { useDispatch } from '../libs/rush'
 import blogService from '../services/blogService'
 
 function Blog({ blog }) {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
+  const queryClient = useQueryClient()
+
+  const updateBlog = useMutation(blogService.update, {
+    onSuccess: (data) => {
+      queryClient.setQueryData('blogs', (old) =>
+        old.map((oldBlog) => (oldBlog.id === data.id ? data : oldBlog))
+      )
+      dispatch(setNotificationWithTimeout('vote added'))
+    },
+    onError: (error) => {
+      dispatch(setNotificationWithTimeout(error.message, 'error'))
+    },
+  })
+
+  const removeBlog = useMutation(blogService.remove, {
+    onSuccess: () => {
+      queryClient.setQueryData('blogs', (old) =>
+        old.filter((oldBlog) => oldBlog.id !== blog.id)
+      )
+      dispatch(setNotificationWithTimeout('blog removed'))
+    },
+    onError: (error) => {
+      dispatch(setNotificationWithTimeout(error.message, 'error'))
+    },
+  })
 
   const style = {
     border: '1px solid black',
@@ -15,26 +40,12 @@ function Blog({ blog }) {
   }
 
   const increaseLikesByOne = async () => {
-    try {
-      const result = await blogService.update(blog.id, {
-        likes: blog.likes + 1,
-      })
-      dispatch(changeBlog(result))
-    } catch (exception) {
-      dispatch(setNotificationWithTimeout('error updating blog', 'error'))
-    }
+    updateBlog.mutate({ id: blog.id, likes: blog.likes + 1 })
   }
 
   const remove = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      try {
-        await blogService.remove(blog.id)
-        dispatch(removeBlog(blog.id))
-      } catch (exception) {
-        console.log(exception)
-        dispatch(setNotificationWithTimeout('error removing blog', 'error'))
-      }
-    }
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
+      removeBlog.mutate(blog.id)
   }
 
   return (

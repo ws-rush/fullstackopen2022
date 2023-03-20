@@ -1,4 +1,3 @@
-import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogService'
 
 // check if user is stored in localStorage
@@ -8,11 +7,13 @@ if (storedUserJSON) {
   storedUser = JSON.parse(storedUserJSON)
 }
 
-const userReducer = createSlice({
+// notification reducer
+const userReducer = {
   name: 'user',
   initialState: storedUser,
-  reducers: {
-    setUser(state, action) {
+  reducer: (state, action) => {
+    switch (action.type) {
+    case 'user/setUser':
       if (action.payload) {
         window.localStorage.setItem(
           'loggedBlogsappUser',
@@ -21,13 +22,13 @@ const userReducer = createSlice({
         blogService.setToken(action.payload.token)
       }
       return action.payload
-    },
-    clearUser() {
+    case 'user/clearUser':
       window.localStorage.removeItem('loggedBlogsappUser')
       return null
-    },
+    default:
+      return state
+    }
   },
-})
+}
 
-export const { setUser, clearUser } = userReducer.actions
-export default userReducer.reducer
+export default userReducer
