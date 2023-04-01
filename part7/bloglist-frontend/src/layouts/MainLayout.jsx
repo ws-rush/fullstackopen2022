@@ -5,6 +5,7 @@ export default function MainLayout() {
   return (
     <>
       <Nav />
+      <h1>blog app</h1>
       <Outlet />
     </>
   )

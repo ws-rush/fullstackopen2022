@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from '../libs/rush'
 
 export default function Nav() {
@@ -12,11 +12,19 @@ export default function Nav() {
   }
 
   return (
-    <p>
-      {user.name} logged in{' '}
-      <button type="button" onClick={handleLogout}>
-        logout
-      </button>
-    </p>
+    <ul>
+      <li>
+        <NavLink to="/">blogs</NavLink>
+      </li>
+      <li>
+        <NavLink to="/users">users</NavLink>
+      </li>
+      <li>
+        {user.name} logged in{' '}
+        <button type="button" onClick={handleLogout}>
+          logout
+        </button>
+      </li>
+    </ul>
   )
 }
