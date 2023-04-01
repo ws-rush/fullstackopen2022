@@ -1,4 +1,4 @@
-import { createSlice } from '../libs/rush'
+import { createSlice } from '@reduxjs/toolkit'
 
 const notificationReducer = createSlice({
   name: 'notification',

@@ -1,4 +1,4 @@
-import { useDispatch } from '../libs/rush'
+import { useDispatch } from 'react-redux'
 import loginService from '../services/loginService'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 

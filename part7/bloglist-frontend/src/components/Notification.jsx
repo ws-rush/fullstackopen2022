@@ -1,4 +1,4 @@
-import { useSelector } from '../libs/rush'
+import { useSelector } from 'react-redux'
 
 function Notification() {
   const notification = useSelector((state) => state.notification)

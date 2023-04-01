@@ -1,5 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogService'
-import { createSlice } from '../libs/rush'
 
 // check if user is stored in localStorage
 const storedUserJSON = window.localStorage.getItem('loggedBlogsappUser')

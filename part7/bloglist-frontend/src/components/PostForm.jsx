@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query'
+import { useDispatch } from 'react-redux'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 import blogService from '../services/blogService'
-import { useDispatch } from '../libs/rush'
 
 function PostForm({ formRef }) {
   const dispatch = useDispatch()
