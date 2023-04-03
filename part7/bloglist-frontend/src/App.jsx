@@ -8,10 +8,8 @@ import Users from './pages/Users'
 import User from './pages/User'
 import MainLayout from './layouts/MainLayout'
 
-export default function App() {
-  const dispatch = useDispatch()
-  const hooks = { dispatch }
-  const router = createBrowserRouter([
+function routing(hooks) {
+  return createBrowserRouter([
     {
       path: '/',
       element: <MainLayout />,
@@ -37,6 +35,12 @@ export default function App() {
       ],
     },
   ])
+}
+
+export default function App() {
+  const dispatch = useDispatch()
+  const hooks = { dispatch }
+  const router = routing(hooks)
   return (
     <>
       <Notification />

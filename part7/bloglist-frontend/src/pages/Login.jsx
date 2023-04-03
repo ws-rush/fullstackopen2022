@@ -28,6 +28,7 @@ export const action =
         dispatch(
           setNotificationWithTimeout('wrong username or password', 'error')
         )
+        return null
       }
       return redirect('/')
     }
