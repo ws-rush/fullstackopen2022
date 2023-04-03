@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Notification from './components/Notification'
-import Login, { action as actionLogin } from './pages/Login'
+import Login from './pages/Login'
 import Blogs, { blogsAction } from './pages/Blogs'
 import Blog from './pages/Blog'
 import Users from './pages/Users'
@@ -27,8 +27,9 @@ function routing(hooks) {
             { path: '/users/:id', element: <User /> },
             {
               path: '/login',
-              element: <Login />,
-              action: actionLogin(hooks),
+              // element: <Login.Component />,
+              Component: Login.Component,
+              action: (args) => Login.action({ ...args, ...hooks }),
             },
           ],
         },
