@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import Nav from '../components/Nav'
 
-export default function MainLayout() {
+function Component() {
   return (
     <>
       <Nav />
@@ -10,3 +10,5 @@ export default function MainLayout() {
     </>
   )
 }
+
+export default { Component }

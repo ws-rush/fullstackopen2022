@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Notification from './components/Notification'
 import Login from './pages/Login'
-import Blogs, { blogsAction } from './pages/Blogs'
+import Blogs from './pages/Blogs'
 import Blog from './pages/Blog'
 import Users from './pages/Users'
 import User from './pages/User'
@@ -12,24 +12,20 @@ function routing(hooks) {
   return createBrowserRouter([
     {
       path: '/',
-      element: <MainLayout />,
+      element: <MainLayout.Component />,
       children: [
         {
           element: null,
           children: [
-            {
-              path: '/',
-              element: <Blogs />,
-              action: blogsAction,
-            },
-            { path: '/blogs:id', element: <Blog /> },
-            { path: '/users', element: <Users /> },
-            { path: '/users/:id', element: <User /> },
+            { index: true, ...Blogs },
+            { path: 'blogs:id', ...Blog },
+            { path: 'users', ...Users },
+            { path: 'users/:id', ...User },
             {
               path: '/login',
-              // element: <Login.Component />,
-              Component: Login.Component,
               action: (args) => Login.action({ ...args, ...hooks }),
+              Component: Login.Component,
+              // element: <Login.Component />,
             },
           ],
         },

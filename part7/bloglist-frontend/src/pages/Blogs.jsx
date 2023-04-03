@@ -7,7 +7,7 @@ import PostForm from '../components/PostForm'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 import blogService from '../services/blogService'
 
-export async function blogsAction({ request }) {
+async function action({ request }) {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const { mutate } = useMutation(blogService.create, {
@@ -29,7 +29,7 @@ export async function blogsAction({ request }) {
   mutate(blogObject)
 }
 
-export default function Blogs() {
+function Component() {
   const blogFormRef = useRef()
   return (
     <>
@@ -40,3 +40,5 @@ export default function Blogs() {
     </>
   )
 }
+
+export default { action, Component }

@@ -1,3 +1,5 @@
-export default function User() {
+function Component() {
   return null
 }
+
+export default { Component }
