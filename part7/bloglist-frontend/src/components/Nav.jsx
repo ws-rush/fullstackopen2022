@@ -1,5 +1,6 @@
 import { useNavigate, NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { clearUser } from '../reducers/userReducer'
 
 export default function Nav() {
   const user = useSelector((state) => state.user)
@@ -7,7 +8,7 @@ export default function Nav() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    dispatch({ type: 'user/clearUser' })
+    dispatch(clearUser())
     navigate('/login')
   }
 
@@ -19,12 +20,14 @@ export default function Nav() {
       <li>
         <NavLink to="/users">users</NavLink>
       </li>
-      <li>
-        {user.name} logged in{' '}
-        <button type="button" onClick={handleLogout}>
-          logout
-        </button>
-      </li>
+      {user && (
+        <li>
+          {user.name} logged in{' '}
+          <button type="button" onClick={handleLogout}>
+            logout
+          </button>
+        </li>
+      )}
     </ul>
   )
 }
