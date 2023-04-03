@@ -7,6 +7,7 @@ import Blog from './pages/Blog'
 import Users from './pages/Users'
 import User from './pages/User'
 import MainLayout from './layouts/MainLayout'
+import ProtectLayout from './layouts/ProtectLayout'
 
 function routing(hooks) {
   return createBrowserRouter([
@@ -15,18 +16,18 @@ function routing(hooks) {
       element: <MainLayout.Component />,
       children: [
         {
-          element: null,
+          path: 'login',
+          action: (args) => Login.action({ ...args, ...hooks }),
+          Component: Login.Component,
+          // element: <Login.Component />,
+        },
+        {
+          element: <ProtectLayout.Component />,
           children: [
             { index: true, ...Blogs },
             { path: 'blogs:id', ...Blog },
             { path: 'users', ...Users },
             { path: 'users/:id', ...User },
-            {
-              path: '/login',
-              action: (args) => Login.action({ ...args, ...hooks }),
-              Component: Login.Component,
-              // element: <Login.Component />,
-            },
           ],
         },
       ],

@@ -1,5 +1,5 @@
-// import { useDispatch } from 'react-redux'
-import { Form, redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Form, redirect, Navigate } from 'react-router-dom'
 import loginService from '../services/loginService'
 import blogService from '../services/blogService'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
@@ -30,6 +30,11 @@ async function action({ request, dispatch }) {
 }
 
 function Component() {
+  const user = useSelector((state) => state.user)
+  if (user) {
+    return <Navigate to="/" />
+  }
+
   return (
     <>
       <Form method="post" action="/login">
