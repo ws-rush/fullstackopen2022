@@ -1,14 +1,12 @@
 import { useNavigate, NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { clearUser } from '../reducers/userReducer'
+import useAuth from '../hooks/useAuth'
 
 export default function Nav() {
-  const user = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    dispatch(clearUser())
+    logout()
     navigate('/login')
   }
 

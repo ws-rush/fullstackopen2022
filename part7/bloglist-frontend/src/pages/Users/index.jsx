@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query'
+import blogService from '../../services/blogService'
 
 export default function Users() {
   const users = useQuery('blogs', blogService.getAll)

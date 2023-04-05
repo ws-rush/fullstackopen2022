@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
-import loginService from '../services/loginService'
+import useAuth from '../hooks/useAuth'
 import blogService from '../services/blogService'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
-import { setUser } from '../reducers/userReducer'
 
 export default function Login() {
   const user = useSelector((state) => state.user)
+  const { login } = useAuth()
   const dispatch = useDispatch()
 
   const onSubmit = async (event) => {
@@ -14,14 +14,8 @@ export default function Login() {
     const username = event.target.username.value
     const password = event.target.password.value
     try {
-      const loggedUser = await loginService.login({ username, password })
-      dispatch(setUser(loggedUser))
-      window.localStorage.setItem(
-        'loggedBlogappUser',
-        JSON.stringify(loggedUser)
-      )
+      const loggedUser = await login({ username, password })
       blogService.setToken(loggedUser.token)
-      dispatch(setUser(loggedUser))
       dispatch(
         setNotificationWithTimeout(`welcome ${loggedUser.username}`, 'success')
       )
