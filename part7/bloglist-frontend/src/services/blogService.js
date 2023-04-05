@@ -11,6 +11,11 @@ const getAll = async () => {
   return response.json()
 }
 
+const getOne = async (id) => {
+  const response = await fetch(`${baseUrl}/${id}`)
+  return response.json()
+}
+
 const create = async (newObject) => {
   const response = await fetch(baseUrl, {
     method: 'POST',
@@ -58,5 +63,5 @@ const remove = async (id) => {
   return response
 }
 
-const blogService = { setToken, getAll, create, update, remove }
+const blogService = { setToken, getAll, getOne, create, update, remove }
 export default blogService

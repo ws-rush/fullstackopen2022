@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import blogService from '../services/blogService'
+import blogService from '../../services/blogService'
 
 export default function BlogList() {
   const result = useQuery('blogs', blogService.getAll)

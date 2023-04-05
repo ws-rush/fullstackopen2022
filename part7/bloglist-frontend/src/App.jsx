@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Notification from './components/Notification'
 import Login from './pages/Login'
@@ -9,36 +8,29 @@ import User from './pages/User'
 import MainLayout from './layouts/MainLayout'
 import ProtectLayout from './layouts/ProtectLayout'
 
-function routing(hooks) {
-  return createBrowserRouter([
-    {
-      path: '/',
-      element: <MainLayout.Component />,
-      children: [
-        {
-          path: 'login',
-          action: (args) => Login.action({ ...args, ...hooks }),
-          Component: Login.Component,
-          // element: <Login.Component />,
-        },
-        {
-          element: <ProtectLayout.Component />,
-          children: [
-            { index: true, ...Blogs },
-            { path: 'blogs:id', ...Blog },
-            { path: 'users', ...Users },
-            { path: 'users/:id', ...User },
-          ],
-        },
-      ],
-    },
-  ])
-}
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <MainLayout.Component />,
+    children: [
+      {
+        path: 'login',
+        Component: Login,
+      },
+      {
+        element: <ProtectLayout.Component />,
+        children: [
+          { index: true, Component: Blogs },
+          { path: 'blogs/:id', Component: Blog },
+          { path: 'users', Component: Users },
+          { path: 'users/:id', Component: User },
+        ],
+      },
+    ],
+  },
+])
 
 export default function App() {
-  const dispatch = useDispatch()
-  const hooks = { dispatch }
-  const router = routing(hooks)
   return (
     <>
       <Notification />
