@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query'
+import { Stack, TextField, Button } from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function PostComment({ id }) {
@@ -21,8 +22,12 @@ export default function PostComment({ id }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" name="comment" />
-      <input type="submit" value="add comment" />
+      <Stack>
+        <TextField type="text" label="comment" name="comment" /> <br />
+        <Button type="submit" color="primary" variant="contained">
+          add comment
+        </Button>
+      </Stack>
     </form>
   )
 }

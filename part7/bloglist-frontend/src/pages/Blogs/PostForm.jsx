@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { useMutation, useQueryClient } from 'react-query'
+import { Button, Stack, TextField } from '@mui/material'
 import { setNotificationWithTimeout } from '../../reducers/notificationReducer'
 import useFetcher from '../../hooks/useFetcher'
 
@@ -31,10 +32,14 @@ export default function PostForm({ formRef }) {
 
   return (
     <form method="post" action="/" onSubmit={handleSubmit}>
-      title: <input type="text" name="title" /> <br />
-      author: <input type="text" name="author" /> <br />
-      url: <input type="text" name="url" /> <br />
-      <input type="submit" value="create" />
+      <Stack>
+        <TextField type="text" label="title" name="title" /> <br />
+        <TextField type="text" label="name" name="author" /> <br />
+        <TextField type="text" label="url" name="url" /> <br />
+        <Button type="submit" color="primary" variant="contained">
+          create
+        </Button>
+      </Stack>
     </form>
   )
 }

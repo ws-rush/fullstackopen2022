@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
+import { Button, Stack, TextField } from '@mui/material'
 import useAuth from '../hooks/useAuth'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 
@@ -31,9 +32,13 @@ export default function Login() {
   return (
     <>
       <form onSubmit={onSubmit}>
-        <input type="text" name="username" />
-        <input type="password" name="password" />
-        <input type="submit" value="login" />
+        <Stack spacing={1}>
+          <TextField type="text" label="username" name="username" />
+          <TextField type="password" label="password" name="password" />
+          <Button type="submit" color="primary" variant="contained">
+            login
+          </Button>
+        </Stack>
       </form>
       <p>Blog app, wusaby-rush 2022</p>
     </>

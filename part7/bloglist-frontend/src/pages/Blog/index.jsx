@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router-dom'
+import { useParams, Navigate, Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import useFetcher from '../../hooks/useFetcher'
 import Vote from './Vote'
@@ -22,9 +22,9 @@ export default function Blog() {
   return (
     <>
       <h1>{blog.title}</h1>
-      <p>{blog.url}</p>
+      <Link to={blog.url}>{blog.url}</Link>
       <Vote key={blog.likes} blog={blog} />
-      <p>added by {blog.author}</p>
+      <em>added by {blog.author}</em>
       <h2>comments</h2>
       <CommentList id={id} />
     </>

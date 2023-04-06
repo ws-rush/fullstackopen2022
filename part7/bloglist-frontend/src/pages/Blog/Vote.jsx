@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation } from 'react-query'
+import { Button } from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function Vote({ blog }) {
@@ -21,10 +22,10 @@ export default function Vote({ blog }) {
 
   return (
     <p>
-      {likes} likes
-      <button type="button" onClick={vote}>
+      {likes} likes{' '}
+      <Button type="button" color="primary" variant="outlined" onClick={vote}>
         like
-      </button>
+      </Button>
     </p>
   )
 }

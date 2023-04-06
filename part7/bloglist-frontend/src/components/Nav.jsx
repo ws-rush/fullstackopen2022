@@ -1,4 +1,5 @@
-import { useNavigate, NavLink } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { AppBar, Button, IconButton, Toolbar } from '@mui/material'
 import useAuth from '../hooks/useAuth'
 
 export default function Nav() {
@@ -11,21 +12,28 @@ export default function Nav() {
   }
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">blogs</NavLink>
-      </li>
-      <li>
-        <NavLink to="/users">users</NavLink>
-      </li>
-      {user && (
-        <li>
-          {user.name} logged in{' '}
-          <button type="button" onClick={handleLogout}>
-            logout
-          </button>
-        </li>
-      )}
-    </ul>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu" />
+        <Button color="inherit" component={Link} to="/">
+          home
+        </Button>
+        <Button color="inherit" component={Link} to="/users">
+          users
+        </Button>
+        {user ? (
+          <>
+            <em>{user.name} logged in</em>
+            <Button color="inherit" onClick={handleLogout}>
+              logout
+            </Button>
+          </>
+        ) : (
+          <Button color="inherit" component={Link} to="/login">
+            login
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   )
 }

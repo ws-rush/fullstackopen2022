@@ -1,4 +1,13 @@
 import { useQuery } from 'react-query'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Box,
+} from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 import PostComment from './PostComment'
 
@@ -17,11 +26,19 @@ export default function CommentList({ id }) {
   return (
     <>
       <PostComment id={id} />
-      <ul>
-        {data.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
-        ))}
-      </ul>
+      <Box my={2}>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableBody>
+              {data.map((comment) => (
+                <TableRow key={comment.id}>
+                  <TableCell>{comment.content}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </>
   )
 }

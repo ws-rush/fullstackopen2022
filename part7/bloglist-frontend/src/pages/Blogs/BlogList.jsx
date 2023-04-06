@@ -1,5 +1,14 @@
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
+import {
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function BlogList() {
@@ -14,21 +23,23 @@ export default function BlogList() {
     return <div>error: {result.error.message}</div>
   }
 
-  const style = {
-    border: '1px solid black',
-    padding: '5px',
-    margin: '5px',
-  }
-
   const blogs = [...result.data].sort((a, b) => b.likes - a.likes)
   return (
-    <>
-      {blogs.map((blog) => (
-        // <Blog key={blog.id} blog={blog} />
-        <h3 key={blog.id} style={style}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-        </h3>
-      ))}
-    </>
+    <Box my={2}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell align="right">{blog.author}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }

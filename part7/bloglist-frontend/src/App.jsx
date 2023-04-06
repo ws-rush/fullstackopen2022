@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Container } from '@mui/material'
 import Notification from './components/Notification'
 import Login from './pages/Login'
 import Blogs from './pages/Blogs'
@@ -32,9 +33,9 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <>
+    <Container>
       <Notification />
       <RouterProvider router={router} />
-    </>
+    </Container>
   )
 }

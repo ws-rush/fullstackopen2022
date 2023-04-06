@@ -1,5 +1,13 @@
 import { useParams, Navigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
+import {
+  TableContainer,
+  Paper,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function User() {
@@ -20,11 +28,17 @@ export default function User() {
     <>
       <h1>{data.name}</h1>
       <h2>added blogs</h2>
-      <ul>
-        {data.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {data.blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>{blog.title}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   )
 }
