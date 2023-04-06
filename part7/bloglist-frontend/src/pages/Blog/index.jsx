@@ -1,12 +1,12 @@
 import { useParams, Navigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
-import blogService from '../../services/blogService'
+import useFetcher from '../../hooks/useFetcher'
 import Vote from './Vote'
 
 export default function Blog() {
   const { id } = useParams()
-  const { data, isLoading } = useQuery('blog', () => blogService.getOne(id))
-  console.log('data', data)
+  const { getOne } = useFetcher('blogs')
+  const { data, isLoading } = useQuery('blog', () => getOne(id))
 
   if (isLoading) {
     return <div>loading...</div>

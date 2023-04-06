@@ -1,12 +1,13 @@
 import { useDispatch } from 'react-redux'
 import { useMutation, useQueryClient } from 'react-query'
 import { setNotificationWithTimeout } from '../../reducers/notificationReducer'
-import blogService from '../../services/blogService'
+import useFetcher from '../../hooks/useFetcher'
 
 export default function PostForm({ formRef }) {
+  const { create } = useFetcher('blogs')
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
-  const { mutate } = useMutation(blogService.create, {
+  const { mutate } = useMutation(create, {
     onSuccess: (data) => {
       queryClient.setQueryData('blogs', (old) => [...old, data])
       dispatch(setNotificationWithTimeout(`a new blog ${data.title} added`))

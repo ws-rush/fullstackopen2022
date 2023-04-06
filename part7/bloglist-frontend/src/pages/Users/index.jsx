@@ -1,8 +1,9 @@
 import { useQuery } from 'react-query'
-import blogService from '../../services/blogService'
+import useFetcher from '../../hooks/useFetcher'
 
 export default function Users() {
-  const users = useQuery('blogs', blogService.getAll)
+  const { getAll } = useFetcher('blogs')
+  const users = useQuery('blogs', getAll)
 
   if (users.isLoading) {
     return <div>loading...</div>

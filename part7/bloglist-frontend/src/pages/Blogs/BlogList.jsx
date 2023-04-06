@@ -1,9 +1,10 @@
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import blogService from '../../services/blogService'
+import useFetcher from '../../hooks/useFetcher'
 
 export default function BlogList() {
-  const result = useQuery('blogs', blogService.getAll)
+  const { getAll } = useFetcher('blogs')
+  const result = useQuery('blogs', getAll)
 
   if (result.isLoading) {
     return <div>loading...</div>

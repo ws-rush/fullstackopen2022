@@ -1,59 +1,60 @@
-import { useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
-import { setNotificationWithTimeout } from '../reducers/notificationReducer'
-import { useDispatch } from '../libs/rush'
-import blogService from '../services/blogService'
+import { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
+import { useDispatch } from "react-redux";
+import useFetcher from "../hooks/useFetcher";
+import { setNotificationWithTimeout } from "../reducers/notificationReducer";
 
 function Blog({ blog }) {
-  const [visible, setVisible] = useState(false)
-  const dispatch = useDispatch()
-  const queryClient = useQueryClient()
+  const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const { update, remove } = useFetcher("blogs");
 
-  const updateBlog = useMutation(blogService.update, {
+  const updateBlog = useMutation(update, {
     onSuccess: (data) => {
-      queryClient.setQueryData('blogs', (old) =>
+      queryClient.setQueryData("blogs", (old) =>
         old.map((oldBlog) => (oldBlog.id === data.id ? data : oldBlog))
-      )
-      dispatch(setNotificationWithTimeout('vote added'))
+      );
+      dispatch(setNotificationWithTimeout("vote added"));
     },
     onError: (error) => {
-      dispatch(setNotificationWithTimeout(error.message, 'error'))
+      dispatch(setNotificationWithTimeout(error.message, "error"));
     },
-  })
+  });
 
-  const removeBlog = useMutation(blogService.remove, {
+  const removeBlog = useMutation(remove, {
     onSuccess: () => {
-      queryClient.setQueryData('blogs', (old) =>
+      queryClient.setQueryData("blogs", (old) =>
         old.filter((oldBlog) => oldBlog.id !== blog.id)
-      )
-      dispatch(setNotificationWithTimeout('blog removed'))
+      );
+      dispatch(setNotificationWithTimeout("blog removed"));
     },
     onError: (error) => {
-      dispatch(setNotificationWithTimeout(error.message, 'error'))
+      dispatch(setNotificationWithTimeout(error.message, "error"));
     },
-  })
+  });
 
   const style = {
-    border: '1px solid black',
-    padding: '5px',
-    margin: '5px',
-  }
+    border: "1px solid black",
+    padding: "5px",
+    margin: "5px",
+  };
 
   const increaseLikesByOne = async () => {
-    updateBlog.mutate({ id: blog.id, likes: blog.likes + 1 })
-  }
+    updateBlog.mutate({ id: blog.id, likes: blog.likes + 1 });
+  };
 
   const remove = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
-      removeBlog.mutate(blog.id)
-  }
+      removeBlog.mutate(blog.id);
+  };
 
   return (
     <div className="blog" style={style}>
       <h4>
         {blog.title}
         <button type="button" onClick={() => setVisible(!visible)}>
-          {visible ? 'hide' : 'view'}
+          {visible ? "hide" : "view"}
         </button>
       </h4>
       {visible && (
@@ -72,7 +73,7 @@ function Blog({ blog }) {
         </>
       )}
     </div>
-  )
+  );
 }
 
-export default Blog
+export default Blog;

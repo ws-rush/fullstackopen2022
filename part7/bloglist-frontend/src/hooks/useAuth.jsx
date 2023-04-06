@@ -23,15 +23,10 @@ export default function useAuth() {
 
       const loggedUser = await response.json()
       dispatch(setUser(loggedUser))
-      window.localStorage.setItem(
-        'loggedBlogappUser',
-        JSON.stringify(loggedUser)
-      )
       return loggedUser
     },
     logout: async () => {
       dispatch(clearUser())
-      window.localStorage.removeItem('loggedBlogappUser')
     },
   }
 }

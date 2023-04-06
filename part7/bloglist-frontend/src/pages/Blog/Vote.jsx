@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useMutation } from 'react-query'
-import blogService from '../../services/blogService'
+import useFetcher from '../../hooks/useFetcher'
 
 export default function Vote({ blog }) {
   const [likes, setLikes] = useState(blog.likes)
 
-  const { mutate } = useMutation(blogService.update, {
-    onSuccess: (data) => {
+  const { update } = useFetcher('blogs')
+  const { mutate } = useMutation(update, {
+    onSuccess: () => {
       setLikes((prev) => prev + 1)
-      console.log('success', data)
     },
     onError: (error) => {
       console.log('error', error)

@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
-import blogService from '../services/blogService'
 import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 
 export default function Login() {
@@ -15,7 +14,6 @@ export default function Login() {
     const password = event.target.password.value
     try {
       const loggedUser = await login({ username, password })
-      blogService.setToken(loggedUser.token)
       dispatch(
         setNotificationWithTimeout(`welcome ${loggedUser.username}`, 'success')
       )

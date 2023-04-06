@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import blogService from '../services/blogService'
 
 // check if user is stored in localStorage
 const storedUserJSON = window.localStorage.getItem('loggedBlogsappUser')
@@ -18,7 +17,6 @@ const userReducer = createSlice({
           'loggedBlogsappUser',
           JSON.stringify(action.payload)
         )
-        blogService.setToken(action.payload.token)
       }
 
       return action.payload
