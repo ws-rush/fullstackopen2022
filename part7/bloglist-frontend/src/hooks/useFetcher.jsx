@@ -7,6 +7,7 @@ export default function useFetcher(resource) {
 
   return {
     getAll: async () => {
+      console.log(baseURL)
       const response = await fetch(baseURL)
       return response.json()
     },

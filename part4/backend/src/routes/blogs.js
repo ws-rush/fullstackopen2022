@@ -1,6 +1,7 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog.model')
 const User = require('../models/user.model')
+const Comment = require('../models/comment.model')
 const { userExtractor } = require('../utils/middleware')
 
 blogRouter.get('/', async (req, res) => {
@@ -12,6 +13,18 @@ blogRouter.get('/:id', async (req, res) => {
   const blog = await Blog.findById(req.params.id)
   if (blog) {
     res.json(blog)
+  } else {
+    res.status(404).end()
+  }
+})
+
+blogRouter.get('/:id/comments', async (req, res) => {
+  // get all blog comments
+  const blog = await Blog.findById(req.params.id).populate('comments', {
+    content: 1
+  })
+  if (blog) {
+    res.json(blog.comments)
   } else {
     res.status(404).end()
   }
@@ -30,6 +43,20 @@ blogRouter.post('/', async (req, res) => {
   user.blogs = user.blogs.concat(blog._id)
   await user.save()
   res.status(201).json(blog)
+})
+
+blogRouter.post('/:id/comments', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'unauthorized' })
+  }
+
+  // write code to add comment for comments collection
+  // then link it to the blog
+  const comment = await Comment.create({ ...req.body, user: req.user })
+  const blog = await Blog.findById(req.params.id)
+  blog.comments = blog.comments.concat(comment._id)
+  await blog.save()
+  res.status(201).json(comment)
 })
 
 blogRouter.put('/:id', async (req, res) => {

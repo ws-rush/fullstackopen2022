@@ -2,32 +2,31 @@ import { useParams, Navigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import useFetcher from '../../hooks/useFetcher'
 import Vote from './Vote'
+import CommentList from './CommentList'
 
 export default function Blog() {
   const { id } = useParams()
-  const { getOne } = useFetcher('blogs')
-  const { data, isLoading } = useQuery('blog', () => getOne(id))
+  const blogFetcher = useFetcher('blogs')
+  const blogResult = useQuery('blog', () => blogFetcher.getOne(id))
 
-  if (isLoading) {
+  if (blogResult.isLoading) {
     return <div>loading...</div>
   }
 
-  if (!data) {
+  if (!blogResult.data) {
     return <Navigate to="/404" />
   }
 
+  const blog = blogResult.data
+
   return (
     <>
-      <h1>{data.title}</h1>
-      <p>{data.url}</p>
-      <Vote key={data.likes} blog={data} />
-      <p>added by {data.author}</p>
-      {/* <h2>comments</h2>
-      <ul>
-        {data.comments.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
-        ))}
-      </ul> */}
+      <h1>{blog.title}</h1>
+      <p>{blog.url}</p>
+      <Vote key={blog.likes} blog={blog} />
+      <p>added by {blog.author}</p>
+      <h2>comments</h2>
+      <CommentList id={id} />
     </>
   )
 }
