@@ -1,5 +1,6 @@
-import { useParams, Navigate, Link } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
+import { Button } from '@mui/material'
 import useFetcher from '../../hooks/useFetcher'
 import Vote from './Vote'
 import CommentList from './CommentList'
@@ -22,7 +23,7 @@ export default function Blog() {
   return (
     <>
       <h1>{blog.title}</h1>
-      <Link to={blog.url}>{blog.url}</Link>
+      <Button href={blog.url}>{blog.url}</Button>
       <Vote key={blog.likes} blog={blog} />
       <em>added by {blog.author}</em>
       <h2>comments</h2>
