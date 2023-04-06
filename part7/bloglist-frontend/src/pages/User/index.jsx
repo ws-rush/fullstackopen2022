@@ -5,27 +5,26 @@ import useFetcher from '../../hooks/useFetcher'
 export default function User() {
   const { id } = useParams()
   const { getOne } = useFetcher('users')
-  const { data, isLoading } = useQuery('users', () => getOne(id))
+  const { data, isLoading } = useQuery('user', () => getOne(id))
 
   if (isLoading) {
     return <div>loading...</div>
   }
 
-  if (!data) {
+  if (!data.blogs) {
     return <Navigate to="/404" />
   }
+  console.log('data', data)
 
   return (
     <>
-      <h1>{data.title}</h1>
-      <p>{data.url}</p>
-      <p>added by {data.author}</p>
-      {/* <h2>comments</h2>
+      <h1>{data.name}</h1>
+      <h2>added blogs</h2>
       <ul>
-        {data.comments.map((comment) => (
-          <li key={comment.id}>{comment.content}</li>
+        {data.blogs.map((blog) => (
+          <li key={blog.id}>{blog.title}</li>
         ))}
-      </ul> */}
+      </ul>
     </>
   )
 }
