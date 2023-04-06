@@ -1,17 +1,21 @@
+import { Link } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function Users() {
-  const { getAll } = useFetcher('blogs')
-  const users = useQuery('blogs', getAll)
+  const { getAll } = useFetcher('users')
+  const result = useQuery('users', getAll)
 
-  if (users.isLoading) {
+  if (result.isLoading) {
     return <div>loading...</div>
   }
 
-  if (users.isError) {
-    return <div>error: {users.error.message}</div>
+  if (result.isError) {
+    return <div>error: {result.error.message}</div>
   }
+
+  const users = result.data
+
   return (
     <table>
       <tr>
@@ -20,7 +24,9 @@ export default function Users() {
       </tr>
       {users.map((user) => (
         <tr key={user.id}>
-          <td>{user.name}</td>
+          <td>
+            <Link to={user.id}>{user.name}</Link>
+          </td>
           <td>{user.blogs.length}</td>
         </tr>
       ))}
