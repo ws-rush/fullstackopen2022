@@ -1,20 +1,20 @@
+import { useDispatch } from 'react-redux'
 import { useMutation, useQueryClient } from 'react-query'
 import { Button, Stack, TextField } from '@mui/material'
-import { useStore } from '../../zux'
+import { setNotificationWithTimeout } from '../../reducers/notificationReducer'
 import useFetcher from '../../hooks/useFetcher'
 
 export default function PostForm({ formRef }) {
   const { create } = useFetcher('blogs')
-  const notification = useStore('notification')
-
+  const dispatch = useDispatch()
   const queryClient = useQueryClient()
   const { mutate } = useMutation(create, {
     onSuccess: (data) => {
       queryClient.setQueryData('blogs', (old) => [...old, data])
-      notification.notify(`a new blog ${data.title} added`)
+      dispatch(setNotificationWithTimeout(`a new blog ${data.title} added`))
     },
     onError: (error) => {
-      notification.notify(error.message, 'error')
+      dispatch(setNotificationWithTimeout(error.message, 'error'))
     },
   })
 

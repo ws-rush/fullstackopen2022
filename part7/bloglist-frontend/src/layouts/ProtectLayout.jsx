@@ -1,11 +1,14 @@
+import { useSelector } from 'react-redux'
 import { Outlet, Navigate } from 'react-router-dom'
-import { useStore } from '../zux'
 
-export default function ProtectLayout() {
-  const user = useStore('user')
-  if (!user.state) {
+function Component() {
+  const user = useSelector((state) => state.user)
+  // const user = null
+  if (!user) {
     return <Navigate to="/login" />
   }
 
   return <Outlet />
 }
+
+export default { Component }

@@ -1,25 +1,31 @@
+import { useSelector, useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import { Button, Stack, TextField } from '@mui/material'
-import { useStore } from '../zux'
+import useAuth from '../hooks/useAuth'
+import { setNotificationWithTimeout } from '../reducers/notificationReducer'
 
 export default function Login() {
-  const user = useStore('user')
-  const notification = useStore('notification')
+  const user = useSelector((state) => state.user)
+  const { login } = useAuth()
+  const dispatch = useDispatch()
 
   const onSubmit = async (event) => {
     event.preventDefault()
     const username = event.target.username.value
     const password = event.target.password.value
     try {
-      const loggedUser = await user.login({ username, password })
-      notification.notify(`welcome ${ loggedUser.username }`)
+      const loggedUser = await login({ username, password })
+      dispatch(
+        setNotificationWithTimeout(`welcome ${loggedUser.username}`, 'success')
+      )
     } catch (exception) {
-      console.log(exception)
-      notification.notify('wrong username or password', 'error')
+      dispatch(
+        setNotificationWithTimeout('wrong username or password', 'error')
+      )
     }
   }
 
-  if (user.state) {
+  if (user) {
     return <Navigate to="/" />
   }
 
