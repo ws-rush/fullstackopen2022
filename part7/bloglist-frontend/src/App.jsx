@@ -19,7 +19,7 @@ const router = createBrowserRouter([
         Component: Login,
       },
       {
-        element: <ProtectLayout.Component />,
+        element: <ProtectLayout />,
         children: [
           { index: true, Component: Blogs },
           { path: 'blogs/:id', Component: Blog },

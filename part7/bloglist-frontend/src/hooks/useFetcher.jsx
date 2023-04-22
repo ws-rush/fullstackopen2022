@@ -1,8 +1,8 @@
-import { useSelector } from 'react-redux'
+import { useStore } from '../zux'
 
 export default function useFetcher(resource) {
-  const tokenData = useSelector((state) => state.user.token)
-  const token = `bearer ${tokenData}`
+  const user = useStore('user')
+  const token = `bearer ${user.state.token}`
   const baseURL = `/api/${resource}`
 
   return {

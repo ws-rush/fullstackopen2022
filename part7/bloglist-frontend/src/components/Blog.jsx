@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "rux";
 import useFetcher from "../hooks/useFetcher";
 import { setNotificationWithTimeout } from "../reducers/notificationReducer";
 
@@ -44,7 +44,7 @@ function Blog({ blog }) {
     updateBlog.mutate({ id: blog.id, likes: blog.likes + 1 });
   };
 
-  const remove = async () => {
+  const del = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
       removeBlog.mutate(blog.id);
   };
@@ -67,7 +67,7 @@ function Blog({ blog }) {
             </button>
           </p>
           <p>{blog.author}</p>
-          <button type="button" onClick={remove}>
+          <button type="button" onClick={del}>
             remove
           </button>
         </>

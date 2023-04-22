@@ -1,13 +1,13 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { AppBar, Button, IconButton, Toolbar } from '@mui/material'
-import useAuth from '../hooks/useAuth'
+import { useStore } from '../zux'
 
 export default function Nav() {
-  const { user, logout } = useAuth()
+  const user = useStore('user')
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    logout()
+    user.logout()
     navigate('/login')
   }
 

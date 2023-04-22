@@ -1,13 +1,13 @@
 import { Alert } from '@mui/material'
-import { useSelector } from 'react-redux'
+import { useStore } from '../zux'
 
 function Notification() {
-  const notification = useSelector((state) => state.notification)
-  if (!notification || !notification.message) {
+  const notification = useStore('notification')
+  if (!notification.state || !notification.state.message) {
     return null
   }
 
-  return <Alert severity={notification.type}>{notification.message}</Alert>
+  return <Alert severity={notification.state.type}>{notification.state.message}</Alert>
 }
 
 export default Notification
