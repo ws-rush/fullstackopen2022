@@ -18,6 +18,6 @@ jobs:
         run: |
           date +"%A, %B %d, %Y %H:%M:%S"
 
-      - name: full-satck-open-pokedex
+      - name: print current directory
         run: |
-          ls -l part11/full-stack-open-pokedex
+          ls -l .
