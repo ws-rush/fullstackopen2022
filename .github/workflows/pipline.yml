@@ -13,16 +13,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-        
+
       - name: Move to pokedex directory
         run: |
-          cd ./part11/full-stack-open-pokedex
+            cd ./part11/full-stack-open-pokedex
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+
 
       - name: Install dependencies 
         run: pnpm install  
-        
+
       - name: Check style
         run: pnpm eslint
