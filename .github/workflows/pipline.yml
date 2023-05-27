@@ -17,12 +17,10 @@ jobs:
       - name: Install dependencies 
         run: npm install -g pnpm
 
-      - name: Move to pokedex directory
-        run: |
-            cd ./part11/full-stack-open-pokedex
-
-      - name: Install dependencies 
+      - name: Install dependencies
+        working-directory: part11/full-stack-open-pokedex
         run: pnpm install  
 
       - name: Check style
+        working-directory: part11/full-stack-open-pokedex
         run: pnpm eslint
