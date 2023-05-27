@@ -1,0 +1,16 @@
+# python CI tools
+
+- PyLint: A widely used tool for linting Python code. It checks for coding errors, style issues, and other potential problems in the code. PyLint can be integrated with most CI/CD tools.
+- pytest: A popular testing framework for Python. It supports unit testing, functional testing, and integration testing. pytest is easy to use and can be integrated with most CI/CD tools.
+- setuptools: A package for building and distributing Python packages. It provides a simple way to build and distribute Python packages and can be integrated with most CI/CD tools.
+
+# CI alternatives
+
+- Drone CI: Drone CI is an open-source CI/CD tool that is easy to install and use. It supports most programming languages, and the configuration is done using a simple YAML file. Drone CI can be self-hosted or used as a cloud-based service.
+- Travis CI: A continuous integration and testing CI/CD tool. It is free of cost for open source projects and provides seamless integration with GitHub. Travis CI supports more than 20 languages, like Node.js, PHP, Python, etc. along with Docker. You can easily customize the build environment as per your requirements.
+
+# Self-hosted vs. Cloud-based
+
+Cost: Self-hosted environments can be expensive to set up and maintain. On the other hand, cloud-based environments can be cheaper, but the costs can quickly add up as your usage increases.
+Scalability: Cloud-based environments can be more scalable than self-hosted environments. Cloud-based environments can quickly spin up new resources to handle increased traffic or usage.
+Security: Self-hosted environments can provide more control over security than cloud-based environments. However, cloud-based environments have improved their security measures considerably in recent years and can be just as secure as self-hosted environments.
