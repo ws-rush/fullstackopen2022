@@ -13,3 +13,11 @@ jobs:
       - name: Say hello
         run: |
           echo "Hello World!"
+
+      - name: Print date in long format
+        run: |
+          date +"%A, %B %d, %Y %H:%M:%S"
+
+      - name: full-satck-open-pokedex
+        run: |
+          ls -l part11/full-stack-open-pokedex
