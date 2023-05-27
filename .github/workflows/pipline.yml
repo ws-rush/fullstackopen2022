@@ -14,13 +14,14 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+            run_install: false
+
       - name: Move to pokedex directory
         run: |
             cd ./part11/full-stack-open-pokedex
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
-
 
       - name: Install dependencies 
         run: pnpm install  
