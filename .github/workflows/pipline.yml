@@ -24,3 +24,11 @@ jobs:
       - name: Check style
         working-directory: part11/full-stack-open-pokedex
         run: pnpm eslint
+
+      - name: Build project
+        working-directory: part11/full-stack-open-pokedex
+        run: pnpm build  
+
+      - name: Test code
+        working-directory: part11/full-stack-open-pokedex
+        run: pnpm test
