@@ -39,3 +39,4 @@ jobs:
           command: pnpm test:e2e
           start: pnpm start-prod
           wait-on: http://localhost:5000
+          working-directory: part11/full-stack-open-pokedex
