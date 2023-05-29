@@ -8,7 +8,6 @@ app.use(express.static('dist'))
 
 app.get('/health', (req, res) => {
   throw '...errors'
-  res.send('ok')
 })
 
 app.listen(PORT, () => {
