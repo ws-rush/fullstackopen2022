@@ -40,3 +40,12 @@ jobs:
           start: pnpm start-prod
           wait-on: http://localhost:5000
           working-directory: part11/full-stack-open-pokedex
+
+      # Add secrets to github repo it self
+      # connect render to repo wit build and start commands, then stop auto deploy
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          working-directory: part11/full-stack-open-pokedex
