@@ -43,7 +43,7 @@ jobs:
 
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
-      # also make /halth endpoint then connect it to render, if it is not runn render will not deploy it
+      # also make /halth endpoint then connect it to render, if it is not run, render will not deploy it
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
