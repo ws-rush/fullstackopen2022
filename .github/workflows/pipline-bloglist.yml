@@ -47,9 +47,10 @@ jobs:
         working-directory: part4/backend
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SECRET: ${{ secrets.SECRET }}
           NODE_ENV: test
-        run: echo $TEST_MONGODB_URI | cut -c 1-2 && npm run test
+        run: npm run test
 
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
