@@ -43,16 +43,13 @@ jobs:
         working-directory: part4/backend
         run: npm run lint
 
-      - name: create env file
-        working-directory: part4/backend
-        run: |
-          touch .env
-          echo TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }} >> .env
-          echo SECRET: ${{ secrets.SECRET }} >> .env
-
       - name: Test backend code
         working-directory: part4/backend
-        run: npm run test
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          SECRET: ${{ secrets.SECRET }}
+          NODE_ENV: test
+        run: echo "mongo is $TEST_MONGODB_URI" && npm run test
 
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
