@@ -4,7 +4,7 @@ name: Deployment pipeline
 on:
   push: # run pipline with pushes to branch main
     branches:
-      - main # with github flowstrategie make sure to protext this branch with (Require a pull request before merging - Require approvals - Require status checks to pass before merging - Require branches to be up to date before merging)
+      - main # with github flowstrategie make sure to protect this branch with (Require a pull request before merging - Require approvals - Require status checks to pass before merging - Require branches to be up to date before merging)
   pull_request: # run pipline with every pull request
     branches: [main] # which branches
     types: [opened, synchronize] # if pull request opend or updated
@@ -55,6 +55,33 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
+
+      - name: Build Success
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        # if previous step is success
+        if: success()
+        with:
+            severity: info
+            details: A new version of PokeDex has been deployed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+            # customise success message to show deployment url and github actor
+            description: ${{ steps.render.outputs.deploy_url }} - ${{ github.actor }}
+      
+      - name: Build Failure
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+            severity: error
+            details: Build Failed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      
+      - name: Build Cancelled
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: cancelled()
+        with:
+            severity: warn
+            details: Build Cancelled!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   # job 2
   # jobs work in parallise, but here we need it to depend on another job
