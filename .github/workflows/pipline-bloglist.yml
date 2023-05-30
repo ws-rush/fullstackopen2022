@@ -1,0 +1,89 @@
+name: Deployment pipeline
+
+# on: [push, pull_request] work for every branch and every thing
+on:
+  push: # run pipline with pushes to branch main
+    branches:
+      - main # with github flowstrategie make sure to protect this branch with (Require a pull request before merging - Require approvals - Require status checks to pass before merging - Require branches to be up to date before merging)
+  pull_request: # run pipline with every pull request
+    branches: [main] # which branches
+    types: [opened, synchronize] # if pull request opend or updated
+
+jobs:
+  # job 1
+  bloglist_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install frontend dependencies
+        working-directory: part5/bloglist-frontend
+        run: npm install
+
+      - name: Check frontend style
+        working-directory: part5/bloglist-frontend
+        run: npm run lint
+
+      - name: Build frontend project
+        working-directory: part5/bloglist-frontend
+        run: npm run build
+
+      - name: Test frontend code
+        working-directory: part5/bloglist-frontend
+        run: npm run test
+
+      - name: Install backend dependencies
+        working-directory: part5/backend
+        run: npm install
+
+      - name: Check backend style
+        working-directory: part5/backend
+        run: npm run lint
+
+      - name: Test backend code
+        working-directory: part5/backend
+        env:
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          SECRET: ${{ secrets.SECRET }}
+        run: npm run test
+
+      # Add secrets to github repo it self
+      # connect render to repo wit build and start commands, then stop auto deploy
+      # also make /halth endpoint then connect it to render, if it is not run, render will not deploy it
+      # dont run dyploy if event is `pull_request`
+      - name: Deploy to production
+        if: ${{ github.event_name == 'push' }}
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_BLOG_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+
+      - name: Build Success
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        # if previous step is success
+        if: success()
+        with:
+            severity: info
+            details: A new version of PokeDex has been deployed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+            # customise success message to show deployment url and github actor
+            description: ${{ steps.render.outputs.deploy_url }} - ${{ github.actor }}
+      
+      - name: Build Failure
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+            severity: error
+            details: Build Failed!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      
+      - name: Build Cancelled
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: cancelled()
+        with:
+            severity: warn
+            details: Build Cancelled!
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}

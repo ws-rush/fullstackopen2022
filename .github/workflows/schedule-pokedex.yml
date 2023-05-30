@@ -1,45 +1,46 @@
-name: Check Service URL
+# # stopped for resource limit
+# name: Check Service URL
 
-on:
-  schedule:
-    - cron: "*/5 * * * *"
+# on:
+#   schedule:
+#     - cron: "*/5 * * * *"
 
-jobs:
-  check-url:
-    runs-on: ubuntu-20.04
-    steps:
-        - name: Check the deployed service URL
-          uses: jtalk/url-health-check-action@f3f7bd79e4a64218eea7caad72796a1443896aeb
-          with:
-            # Check the following URLs one by one sequentially
-            url: https://pokedex-4ocr.onrender.com/health
-            # Follow redirects, or just report success on 3xx status codes
-            follow-redirect: false # Optional, defaults to "false"
-            # Fail this action after this many failed attempts
-            max-attempts: 3 # Optional, defaults to 1
-            # Delay between retries
-            retry-delay: 5s # Optional, only applicable to max-attempts > 1
-            # Retry all errors, including 404. This option might trigger curl upgrade.
-            retry-all: false # Optional, defaults to "false"
-            # String representation of cookie attached to health check request.
-            # Format: `Name=Value`
-            # cookie: "token=asdf1234" # Optional, default is empty
-            # Basic auth login password pair.
-            # Format: `login:password`
-            # basic-auth: "login:password" # Optional, default is empty
+# jobs:
+#   check-url:
+#     runs-on: ubuntu-20.04
+#     steps:
+#         - name: Check the deployed service URL
+#           uses: jtalk/url-health-check-action@f3f7bd79e4a64218eea7caad72796a1443896aeb
+#           with:
+#             # Check the following URLs one by one sequentially
+#             url: https://pokedex-4ocr.onrender.com/health
+#             # Follow redirects, or just report success on 3xx status codes
+#             follow-redirect: false # Optional, defaults to "false"
+#             # Fail this action after this many failed attempts
+#             max-attempts: 3 # Optional, defaults to 1
+#             # Delay between retries
+#             retry-delay: 5s # Optional, only applicable to max-attempts > 1
+#             # Retry all errors, including 404. This option might trigger curl upgrade.
+#             retry-all: false # Optional, defaults to "false"
+#             # String representation of cookie attached to health check request.
+#             # Format: `Name=Value`
+#             # cookie: "token=asdf1234" # Optional, default is empty
+#             # Basic auth login password pair.
+#             # Format: `login:password`
+#             # basic-auth: "login:password" # Optional, default is empty
 
-        - name: Check Failure
-          uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-          if: failure()
-          with:
-            severity: error
-            details: health check failed!
-            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+#         - name: Check Failure
+#           uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+#           if: failure()
+#           with:
+#             severity: error
+#             details: health check failed!
+#             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
-        - name: Check Success
-          uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
-          if: success()
-          with:
-            severity: info
-            details: health check success!
-            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+#         - name: Check Success
+#           uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+#           if: success()
+#           with:
+#             severity: info
+#             details: health check success!
+#             webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
