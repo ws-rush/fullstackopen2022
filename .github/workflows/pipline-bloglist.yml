@@ -36,15 +36,15 @@ jobs:
         run: npm run test
 
       - name: Install backend dependencies
-        working-directory: part5/backend
+        working-directory: part4/backend
         run: npm install
 
       - name: Check backend style
-        working-directory: part5/backend
+        working-directory: part4/backend
         run: npm run lint
 
       - name: Test backend code
-        working-directory: part5/backend
+        working-directory: part4/backend
         env:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           SECRET: ${{ secrets.SECRET }}
