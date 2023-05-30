@@ -28,7 +28,7 @@ jobs:
             # Format: `login:password`
             # basic-auth: "login:password" # Optional, default is empty
 
-        - name: Build Failure
+        - name: Check Failure
           uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
           if: failure()
           with:
