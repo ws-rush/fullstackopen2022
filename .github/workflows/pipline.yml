@@ -1,5 +1,6 @@
 name: Deployment pipeline
 
+# on: [push, pull_request] work for every branch and every thing
 on:
   push: # run pipline with pushes to branch main
     branches:
@@ -46,7 +47,9 @@ jobs:
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
       # also make /halth endpoint then connect it to render, if it is not run, render will not deploy it
+      # dont run dyploy if event is `pull_request`
       - name: Deploy to production
+        if: ${{ github.event_name == 'push' }}
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
