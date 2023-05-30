@@ -37,6 +37,10 @@ blogRouter.post('/', async (req, res) => {
     return res.status(401).json({ error: 'unauthorized' })
   }
 
+  if (!req.body.title || !req.body.url) {
+    return res.status(400).json({ error: 'title and url are required' })
+  }
+
   // find a user by id
   const user = await User.findById(req.user)
   const blog = await Blog.create({ ...req.body, user: req.user })

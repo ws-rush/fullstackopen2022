@@ -1,8 +1,9 @@
 module.exports = {
   env: {
-    browser: true,
+    node: true,
     commonjs: true,
-    es2021: true
+    es2021: true,
+    'jest/globals': true
   },
   extends: 'standard',
   overrides: [
@@ -10,6 +11,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
+  plugins: ['jest'],
   rules: {
     // here we can override rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',

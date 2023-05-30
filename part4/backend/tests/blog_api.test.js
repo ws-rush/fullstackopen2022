@@ -20,7 +20,7 @@ describe('when there are some blogs in database', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-      expect(response.body).toHaveLength(helper.initialBlogs.length)
+    expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
   test('those are identified by field id', async () => {
@@ -29,7 +29,7 @@ describe('when there are some blogs in database', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-      expect(response.body[0].id).toBeDefined()
+    expect(response.body[0].id).toBeDefined()
   })
 
   describe('modify of a blog', () => {
@@ -117,8 +117,8 @@ describe('when there are some blogs in database', () => {
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
-        const blogsAtEnd = await helper.blogsInDb()
-        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+      const blogsAtEnd = await helper.blogsInDb()
+      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
     })
   })
 })
@@ -138,7 +138,7 @@ describe('user creation', () => {
       username: 'mo',
       pasword: 'sekred'
     }
-  
+
     await api
       .post('/api/auth/register')
       .send(newUser)
@@ -163,7 +163,7 @@ describe('user creation', () => {
     const newUser = {
       username: 'root',
       name: 'Superuser',
-      password: 'salainen',
+      password: 'salainen'
     }
 
     const result = await api
