@@ -9,6 +9,7 @@ on:
     branches: [main] # which branches
     types: [opened, synchronize] # if pull request opend or updated
 jobs:
+  # job 1
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
     steps:
@@ -54,3 +55,17 @@ jobs:
         with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
+
+  # job 2
+  # jobs work in parallise, but here we need it to depend on another job
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }} && ${{ !contains(github.event.head_commit.message, '#skip') }}
+        uses: anothrNick/github-tag-action@1.66.0 # check alaways latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # we share secret in enviroment coz this action is third party, also give token read write perms from settings > action/general
+          DEFAULT_BUMP: patch # bump versioning with #minor or #major in commit message
+          WITH_V: true # add v letter before version

@@ -1,3 +1,5 @@
+# test actions locally with `act` project
+
 name: Hello World!
 
 on:
