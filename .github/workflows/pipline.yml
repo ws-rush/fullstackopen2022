@@ -4,7 +4,7 @@ name: Deployment pipeline
 on:
   push: # run pipline with pushes to branch main
     branches:
-      - main
+      - main # with github flowstrategie make sure to protext this branch with (Require a pull request before merging - Require approvals - Require status checks to pass before merging - Require branches to be up to date before merging)
   pull_request: # run pipline with every pull request
     branches: [main] # which branches
     types: [opened, synchronize] # if pull request opend or updated
