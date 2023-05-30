@@ -62,9 +62,11 @@ jobs:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v3
       - name: Bump version and push tag
         if: ${{ github.event_name == 'push' }} && ${{ !contains(github.event.head_commit.message, '#skip') }}
-        uses: anothrNick/github-tag-action@1.66.0 # check alaways latest version
+        # uses: anothrNick/github-tag-action@1.66.0 # check alaways latest version
+        uses: anothrNick/github-tag-action@72703d02f7df0cdb8f27aeb9feafeccd67b49881 # when using third-party actions, specifying the commit hash instead of the version number ensures that the code used in the workflow remains the same, as version numbers can be moved and the code may be buggy or malicious
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # we share secret in enviroment coz this action is third party, also give token read write perms from settings > action/general
           DEFAULT_BUMP: patch # bump versioning with #minor or #major in commit message
