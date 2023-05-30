@@ -1,10 +1,12 @@
 name: Deployment pipeline
 
 on:
-  push:
+  push: # run pipline with pushes to branch main
     branches:
       - main
-
+  pull_request: # run pipline with every pull request
+    branches: [master] # which branches
+    types: [opened, synchronize] # if pull request opend or updated
 jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-20.04
