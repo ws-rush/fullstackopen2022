@@ -50,12 +50,13 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SECRET: ${{ secrets.SECRET }}
           NODE_ENV: test
-        run: ls -l ./build && npm run test
+        run: npm run test
 
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
       # also make /halth endpoint then connect it to render, if it is not run, render will not deploy it
       # dont run dyploy if event is `pull_request`
+      # same build command should excuted in render
       - name: Deploy to production
         if: ${{ github.event_name == 'push' }}
         uses: johnbeynon/render-deploy-action@v0.0.8
