@@ -50,7 +50,7 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           SECRET: ${{ secrets.SECRET }}
           NODE_ENV: test
-        run: ls -l && npm run test
+        run: ls -l ./build && npm run test
 
       # Add secrets to github repo it self
       # connect render to repo wit build and start commands, then stop auto deploy
