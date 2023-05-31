@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 app.get('/health', (req, res) => {
-  res.send('I am fine')
+  res.send('ok')
 })
 
 module.exports = app
