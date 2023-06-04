@@ -1,5 +1,5 @@
+import { v1 as uuid } from 'uuid'
 import patientsData from '../data/patients';
-
 import { Patient, NonSensitivePatient } from '../types';
 
 const patients: Patient[] = patientsData;
@@ -18,7 +18,19 @@ const getNonSensitiveEntries = (): NonSensitivePatient[] => {
   }));
 }
 
-const addEntry = () => {
+const addEntry = ({ name, dateOfBirth, gender, occupation }) => {
+  // Generate unique id
+  const id = uuid();
+  const newEntry = {
+    id,
+    name,
+    dateOfBirth,
+    gender,
+    occupation,
+  };
+
+  patients.push(newEntry);
+  return newDiaryEntry;
   return null;
 };
 
