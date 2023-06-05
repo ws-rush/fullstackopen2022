@@ -8,13 +8,14 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, dateOfBirth, gender, occupation } = req.body;
+  const { name, dateOfBirth, gender, occupation, ssn } = req.body;
 
   const addedEntry = patientService.addEntry({
     name,
     dateOfBirth,
     gender,
-    occupation
+    occupation,
+    ssn
   });
 
   res.json(addedEntry);
